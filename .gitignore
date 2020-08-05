@@ -1,0 +1,4 @@
+node_modules
+Start_bot.bat
+.env
+mongodbURI.json
