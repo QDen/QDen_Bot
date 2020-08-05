@@ -7,7 +7,7 @@ module.exports = {
     aliases: ["me", "about"],
     category:"info",
     description: "Gives your avatar or the avatar of another user",
-    usage: `\`-<command | alias> [@user]\``,
+    usage: `\`q!<command | alias> [@user]\``,
     run: async (bot, message, args) => {
         const member = getMember(message, args.join(" "));
 

@@ -10,7 +10,7 @@ module.exports = {
     aliases: [""],
     category:"info",
     description: "Displays the prefix of this server or changes the prefix of this server",
-    usage: [`\`-<command | alias> <desired prefix>\``],
+    usage: [`\`q!<command | alias> <desired prefix>\``],
     run: async(bot, message, args, prefix)=>{
         const guild = bot.guilds.cache.get('690499818489118722');
         const staff = guild.roles.cache.find(role => role.name === 'STAFFS');

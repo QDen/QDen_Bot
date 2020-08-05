@@ -15,10 +15,10 @@ module.exports = {
     aliases: ["ctracker"],
     category: "info",
     description: "Sends a message about the current status of COVID-19",
-    usage: ["-<command | alias>"],
+    usage: ["q!<command | alias>"],
     run: async (bot, message, args) => {
         const guild = bot.guilds.cache.get("690499818489118722");
-        const channel = guild.channels.cache.find(c => c.name === 'corona-updates');
+        const channel = guild.channels.cache.find(c => c.id === '739175214344044586');
 
         let title = [];
         let data = [];
