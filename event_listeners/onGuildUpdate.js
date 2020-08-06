@@ -14,15 +14,17 @@ const colors = require('../colors.json');
         const premium = newGuild.premiumSubscriptionCount;
         const date = new Date(Date.now());
 
-        if (oldGuild.name && oldGuild.name !== newGuild.name) {
+        if (basic && premium > basic) {
 
             const member = newGuild.members.cache
             .map(m => {
                 let subscribers = {};
                 let username = m.user.username;
+                let userid = m.user.id;
                 let premium = m.premiumSince;
                 subscribers = {
                     username: username,
+                    id: userid,
                     premium: premium
                 };
                 return subscribers;
@@ -34,12 +36,11 @@ const colors = require('../colors.json');
             if (member[0].premium.toLocaleDateString() === date.toLocaleDateString()) {
                 const embed = new MessageEmbed()
                     .setTitle('**New Server Boost!**')
-                    .setDescription(`Cheers! ${member[0].username} has just boosted the server!`)
+                    .setDescription(`**Cheers! <@${member[0].id}> has just boosted the server!**`)
+                    .setImage('https://media.giphy.com/media/Is1O1TWV0LEJi/giphy.gif')
                     .setColor(colors.Blue);
                 channel.send(embed);
-                
             }
-
 
         }
 
