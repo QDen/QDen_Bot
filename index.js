@@ -27,7 +27,7 @@ config({
 
 // Setup listeners
 let lstTable = new ascii('listeners');
-lstTable.setHeading('Listener', 'Status');
+lstTable.setHeading('Listener', 'Load Status');
 let listeners = readdirSync(`${__dirname}/event_listeners`).filter(v => v.endsWith('.js'));
 listeners.forEach(v => {
     require(`${__dirname}/event_listeners/${v}`)(bot);
@@ -37,7 +37,7 @@ console.log(lstTable.toString());
 
 // Setup commands
 let cmdTable = new ascii("commands");
-cmdTable.setHeading("Command", "Load status");
+cmdTable.setHeading("Command", "Load Status");
 bot.categories.forEach(dir => {
     let commands = readdirSync(`./commands/${dir}`).filter(f => f.endsWith(".js"));
     commands.forEach(file => {

@@ -12,7 +12,7 @@ module.exports = {
 
     let nsg = await message.channel.send("Generating...");
 
-    const { data } = await axios.get('https://apis.duncte123.me/meme');
+    const { data } = await axios.get('https://some-random-api.ml/meme');
     //console.log(data.data.title, data.data.body, data.data.image);
     if(!{data}) {
         return message.channel.send ("My processors didn't cooperate wiht me, Please Try again.");
@@ -20,10 +20,10 @@ module.exports = {
 
         let mEmbed = new Discord.MessageEmbed()
         .setColor(colors.Beige)
-        .setAuthor(`HAVE SOME MEMES YOU BEAUTIFUL SLAP SOILS!!!`, message.guild.iconURL)
-        .setImage(data.data.image)
+        .setAuthor(`${data.caption}`, bot.user.displayAvatarURL())
+        .setImage(data.image)
         .setTimestamp()
-        .setFooter(`AGGRESSIVE GOODTALKER | By MahoMuri`, bot.user.displayAvatarURL());
+        .setFooter(`${bot.user.username} | By MahoMuri`, bot.user.displayAvatarURL());
 
     message.channel.send(mEmbed);
     nsg.delete();
