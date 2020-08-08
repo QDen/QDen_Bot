@@ -19,4 +19,4 @@ I was deloyed using [Heroku](https://www.heroku.com/#) that is connected to this
 ### Authors
 * **MahoMuri** - *Head Developer* - [Profile](https://github.com/MahoMuri)
 ### License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/QDen/QDen_Bot/blob/master/LICENSE) file for details.
