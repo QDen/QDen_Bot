@@ -35,7 +35,7 @@ const colors = require('../colors.json');
             }).sort((a,b) => b.premium - a.premium);
 
             if (member[0].premium.toLocaleDateString() === date.toLocaleDateString()) {
-                const emoji = newGuild.emojis.cache.find(emoji => emoji.name === "boost");
+                const emoji = newGuild.emojis.cache.find(emoji => emoji.name === "boost_animated");
                 const embed = new MessageEmbed()
                     .setTitle(`${emoji} ** New Server Boost!**`)
                     .setDescription(`**Cheers! 🎉 <@${member[0].id}> has just boosted the server!**`)

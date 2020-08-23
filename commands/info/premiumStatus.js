@@ -10,7 +10,7 @@ module.exports = {
     run: async (bot, message, args) => {
 
         const guild = bot.guilds.cache.get(message.guild.id);
-        const emoji = guild.emojis.cache.find(emoji => emoji.name === "boost");
+        const emoji = guild.emojis.cache.find(emoji => emoji.name === "boost_animated");
         const subscribers = guild.members.cache
         .map(m => {
             let subscribers = {};
