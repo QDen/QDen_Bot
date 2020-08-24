@@ -1,9 +1,9 @@
 module.exports = {
     name: "clear",
-    aliases: ["purge", "nuke"],
+    aliases: ["purge", "nuke", "clean"],
     category: "moderations",
     description: "Clears the chat",
-    usage: `\`q!<command | alias> <number>\``,
+    usage: `\`-<command | alias> <number>\``,
     run: async (bot, message, args) => {
 
         await message.delete();
