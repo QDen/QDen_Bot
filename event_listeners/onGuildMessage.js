@@ -23,7 +23,20 @@ module.exports = async bot =>{
             fs.writeFileSync(`${__dirname}/../prefixes.json`, JSON.stringify(prefixes));
         }
 
-        let prefix = prefixes[message.guild.id].prefixes;
+        const lsprfxes = [
+            prefixes[message.guild.id].prefixes,
+            `<@${bot.user.id}>`,
+            `<@&${bot.user.id}>`,
+            `<@!${bot.user.id}>`,
+        ];
+
+        const prefix = lsprfxes
+            .filter((prfx) => message.content.startsWith(prfx))
+            .join("");
+
+        if (message.author.bot || !message.guild || prefix.length <= 0) {
+            return;
+        }
         if (message.author.bot || !message.guild || !message.content.startsWith(prefix)) {
             return;
         }

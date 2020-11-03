@@ -15,19 +15,18 @@ module.exports = {
         const member = getMember(message, args.join(" "));
 
         const avatar = await member.user.displayAvatarURL({ format: "png", dynamic: true });
-        const data =  await `https://some-random-api.ml/canvas/triggered?avatar=${avatar}`;
+        const data =  `https://some-random-api.ml/canvas/triggered?avatar=${avatar}`;
         //console.log(reader.readAsDataURL(data));
         if(!{data}) {
             return message.channel.send ("My processors didn't cooperate with me, Please Try again.");
         }
 
             let mEmbed = new MessageEmbed()
-            .setColor(colors.Lumber)
-            .setAuthor(`${member.user.username} is trigered!!!`, bot.user.displayAvatarURL())
-            .setImage(data)
-            .setTimestamp()
-            .setFooter(`${bot.user.username} | By MahoMuri`, bot.user.displayAvatarURL());
-
+                .setColor(colors.Lumber)
+                .setAuthor(`${member.user.username} is trigered!!!`, bot.user.displayAvatarURL())
+                .setImage(data)
+                .setTimestamp()
+                .setFooter(`${bot.user.username} | By MahoMuri`, bot.user.displayAvatarURL());
             message.channel.send(mEmbed);
             nsg.delete();
     }

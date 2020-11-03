@@ -8,7 +8,7 @@ const colors = require('../colors.json');
      bot.on('message', message => {
          let text = message.content.toLowerCase();
 
-         if (text === 'complaint') {
+         if (text === 'report') {
              
             if (message.channel instanceof TextChannel) {
                 return;
@@ -17,12 +17,12 @@ const colors = require('../colors.json');
             const guild = bot.guilds.cache.get('690499818489118722');
             const channel = guild.channels.cache.find(c => c.id === '692411870417780786');
 
-            message.reply("Hello there, please type your complaint now.");
+            message.reply("**Hello there, please type your complaint now.**");
             const filter = m => m.author.id !== bot.user.id;
 
             message.channel.awaitMessages(filter, { max:1 }).then(collected => {
                 if (collected){
-                    message.reply('Thank you for your complaint! Have a nice day!');
+                    message.reply('**Thank you for your complaint! Have a nice day!**');
                     const embed = new MessageEmbed()
                         .setTitle("**New Complaint!**")
                         .addFields(

@@ -8,7 +8,7 @@ const CAT_API_KEY = process.env.CAT_API_KEY;
 
 module.exports = {
     name: "cat",
-    aliases: ["meow", "purr"],
+    aliases: ["meow", "purr", "neko"],
     category: "entertainment",
     description: "Displays a random cat",
     usage: [`\`-<command | alias>\``],

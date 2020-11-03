@@ -1,62 +1,83 @@
-//const colors = require("../../colors.json");
-const { stripIndents } = require("common-tags");
-const Discord = require('discord.js');
+const Discord = require("discord.js");
 
+const colors = require("../../colors.json");
 
 module.exports = {
-  name: "serverinfo",
-  aliases: ["info", "aboutme"],
-  category:"info",
-  usage: "<prefix>[command | alias]",
-  run: async (bot, message, args) => {
-    //const member = getMember(message, args.join(" "));
+    name: "serverinfo",
+    aliases: ["info", "aboutme"],
+    category: "general",
+    description: "Displays the Information of the Server",
+    usage: "`-<command | alias>`",
+    run(bot, message) {
+        const online = message.guild.members.cache.filter(
+            (m) =>
+                m.user.presence.status === "online" ||
+                m.user.presence.status === "idle" ||
+                m.user.presence.status === "dnd"
+        );
+        const bots = message.guild.members.cache.filter((m) => m.user.bot).size;
+        const textChannel = message.guild.channels.cache.filter(
+            (c) => c.type === "text"
+        ).size;
+        const voiceChannel = message.guild.channels.cache.filter(
+            (c) => c.type === "voice"
+        ).size;
 
-    const staff = message.guild.roles.cache
-    .get('690507218650660874').members
-    .map(m => m.user.username);
+        const options = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        };
 
-    const CoOwner = message.guild.roles.cache
-    .get('737698900517060669').members
-    .map(m => m.user.username);
-
-    let staffList = [];
-    let CoOwnerList = [];
-
-    for (let i = 0; i < staff.length; i++) {
-      if (staffList.length === 0) {
-        staffList = `${i + 1}. ${staff[i]}\n`;
-      } else {
-        staffList = staffList + `${i + 1}. ${staff[i]}\n`;
-      }
-    }
-
-    for (let i = 0; i < CoOwner.length; i++) {
-      if (CoOwnerList.length === 0) {
-        CoOwnerList = `${i + 1}. ${CoOwner[i]}\n`;
-      } else {
-        CoOwnerList = CoOwnerList + `${i + 1}. ${CoOwner[i]}\n`;
-      }
-      
-    }
-
-    let sEmbed = new Discord.MessageEmbed()
-    .setColor("GREEN")
-    .setTitle("Server Info")
-    .setThumbnail(bot.user.displayAvatarURL())
-    .setAuthor(`${message.guild.name}`, bot.user.displayAvatarURL())
-    .addFields(
-      { name: stripIndents `**Display name:**`, value: stripIndents `${message.guild.name}`, inline: true },
-      { name: `**Server Owner:**`, value:`${message.guild.owner.user.username}`, inline: true },
-      { name: `**Co Owners:**`, value:`${CoOwnerList}`, inline: true },
-      { name: `**Staff Members:** `, value:`${staffList}`, inline: true},
-      { name: `**Member Count:** `, value:`${message.guild.memberCount}`, inline: true},
-      { name: `**Role Count:**`, value:`${message.guild.roles.cache.size}`, inline: true},
-      { name: ` **Created At:**`, value:`${message.guild.createdAt}`, inline: true}
-    )
-    .setTimestamp()
-    .setFooter(`QDen | By MahoMuri`, bot.user.displayAvatarURL());
-    message.channel.send(sEmbed);
-
-  }
-
+        const sEmbed = new Discord.MessageEmbed()
+            .setColor(colors.Turquoise)
+            .setTitle(`Server Info for ${message.guild.name}`)
+            .setThumbnail(bot.user.displayAvatarURL())
+            .setAuthor(`${message.guild.name}`, bot.user.displayAvatarURL())
+            .addFields(
+                {
+                    name: "**Users (Online/Total)**",
+                    value: `${online.size}/${message.guild.memberCount - bots}`,
+                    inline: true,
+                },
+                {
+                    name: " **Created At:**",
+                    value: `${message.guild.createdAt.toLocaleDateString(
+                        "en-US",
+                        options
+                    )}`,
+                    inline: true,
+                },
+                {
+                    name: "**Voice/Text Channels**",
+                    value: `${voiceChannel}/${textChannel}`,
+                    inline: true,
+                },
+                {
+                    name: "**Server Owner:**",
+                    value: `${message.guild.owner.user.tag}`,
+                    inline: true,
+                },
+                {
+                    name: "**Region**",
+                    value: `${
+                        message.guild.region[0].toUpperCase() +
+                        message.guild.region.slice(1)
+                    }`,
+                    inline: true,
+                },
+                {
+                    name: "**Role Count:**",
+                    value: `${message.guild.roles.cache.size}`,
+                    inline: true,
+                }
+            )
+            .setTimestamp()
+            .setFooter(
+                `${bot.user.username} | By MahoMuri`,
+                bot.user.displayAvatarURL()
+            );
+        message.channel.send(sEmbed);
+    },
 };

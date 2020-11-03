@@ -25,13 +25,12 @@ module.exports = {
     }
 
         let mEmbed = new MessageEmbed()
-        .setColor(colors.Lumber)
-        .setAuthor(`${message.author.username} hugs ${member.user.username} wahhhhh!`, bot.user.displayAvatarURL())
-        .setImage(data.link)
-        .setTimestamp()
-        .setFooter(`${bot.user.username} | By MahoMuri`, bot.user.displayAvatarURL());
-
-    message.channel.send(mEmbed);
-    nsg.delete();
+            .setColor(colors.Lumber)
+            .setAuthor(`${message.author.username} pats ${member.user.username} wahhhhh!`, member.user.displayAvatarURL())
+            .setImage(data.link)
+            .setTimestamp()
+            .setFooter(`${bot.user.username} | By MahoMuri`, bot.user.displayAvatarURL());
+        message.channel.send(mEmbed);
+        nsg.delete();
     }
 };

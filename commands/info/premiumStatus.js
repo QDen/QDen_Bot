@@ -24,9 +24,8 @@ module.exports = {
             };
             return subscribers;
         })
-        .filter(function(m) {
-            return m.premium !== null;
-        }).sort((a,b) => b.premium - a.premium);
+        .filter(m => m.premium !== null)
+        .sort((a,b) => b.premium - a.premium);
 
 
         let subscriberList = [];

@@ -20,7 +20,7 @@ module.exports = {
 
         let mEmbed = new Discord.MessageEmbed()
         .setColor(colors.Beige)
-        .setAuthor(`${data.caption}`, bot.user.displayAvatarURL())
+        .setAuthor(`${data.caption}`, message.author.displayAvatarURL())
         .setImage(data.image)
         .setTimestamp()
         .setFooter(`${bot.user.username} | By MahoMuri`, bot.user.displayAvatarURL());

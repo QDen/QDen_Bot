@@ -1,4 +1,7 @@
 node_modules
 Start_bot.bat
 .env
+.templates
+template.config.js
 mongodbURI.json
+QDen-e5f7fb8a0b6d.json

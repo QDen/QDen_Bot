@@ -12,7 +12,7 @@ const BREED_URL = "https://dogtime.com";
 
 module.exports = {
   name: "dog",
-  aliases: ["bark", "howl"],
+  aliases: ["bark", "howl", "doggo"],
   category:"entertainment",
   description: "Displays a random dog",
   usage: [`\`-<command | alias>\``],

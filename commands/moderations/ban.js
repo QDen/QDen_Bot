@@ -82,7 +82,7 @@ module.exports = {
                 msg.delete();
                 message.channel.send(`Successfuly Banned ${args[0]}!`).then(m => m.delete({timeout: 15000, reason :"It had to be done."}));
 
-                toBan.ban(args.slice(1).join(" "))
+                toBan.ban()
                     .catch(err => {
                         if (err) {
 

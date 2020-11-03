@@ -22,11 +22,11 @@ module.exports = {
         }
 
             let mEmbed = new MessageEmbed()
-            .setColor(colors.Lumber)
-            .setAuthor(`${member.user.username} got wasted!!!`, bot.user.displayAvatarURL())
-            .setImage(data)
-            .setTimestamp()
-            .setFooter(`${bot.user.username} | By MahoMuri`, bot.user.displayAvatarURL());
+                .setColor(colors.Lumber)
+                .setAuthor(`${member.user.username} got wasted!!!`, bot.user.displayAvatarURL())
+                .setImage(data)
+                .setTimestamp()
+                .setFooter(`${bot.user.username} | By MahoMuri`, bot.user.displayAvatarURL());
 
             message.channel.send(mEmbed);
             nsg.delete();

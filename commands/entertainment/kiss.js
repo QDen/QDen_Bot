@@ -26,7 +26,7 @@ module.exports = {
 
         let mEmbed = new MessageEmbed()
             .setColor(colors.Dark_Pastel_Blue)
-            .setAuthor(`${message.author.username} kissed ${member.user.username}! UwU`, bot.user.displayAvatarURL())
+            .setAuthor(`${message.author.username} kissed ${member.user.username}! UwU`, member.user.displayAvatarURL())
             .setImage(data.results[0].media[0].gif.url)
             .setTimestamp()
             .setFooter(`${bot.user.username} | By MahoMuri`, bot.user.displayAvatarURL());

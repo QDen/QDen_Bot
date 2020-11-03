@@ -49,23 +49,31 @@ module.exports = {
             .then(m => m.delete({timeout: 5000, reason :"It had to be done."}));
         }
 
-        let muted = message.guild.roles.cache.find(role => role.name === "tuporsiksOwan");
+        const position = message.guild.roles.cache.find(role => role.name === 'Q-tizens').position;
+        let restrictedCategies = ['690515530393583636', '740926177690124418', '690510113634517002'];
+        let muted = message.guild.roles.cache.find(role => role.name === "Muted");
         if (!muted) {
             try {
                 muted = await message.guild.roles.create({
                     data: {
-                        name: 'MUTED',
+                        name: 'Muted',
                         color: 'BLACK',
+                        position: position + 1,
                         permissions: []
                     }
                 });
-                message.guild.channels.cache.forEach(async (channel, id) => {
-                    await channel.createOverwrite(muted, {
-                        'SEND_MESSAGES': false,
-                        'ADD_REACTIONS': false,
-                        'CONNECT': false,
-                        'SPEAK': false
-                    });
+                message.guild.channels.cache.forEach(async (channel) => {
+                    if (channel.type === 'category') {
+                        if (!restrictedCategies.includes(channel.id)) {
+                            await channel.updateOverwrite(muted, {
+                                'SEND_MESSAGES': false,
+                                'ADD_REACTIONS': false,
+                                'CONNECT': false,
+                                'SPEAK': false
+                            });
+                        }
+                    }
+
                     //message.reply(channel);
                 });
             } catch (e) {
@@ -74,14 +82,12 @@ module.exports = {
         }
 
         let timer = args[1];
-
         await toMute.roles.add(muted);
-        message.channel.send(`Successfuly Muted ${args[0]} for ${ms(ms(timer))}!`).then(m => m.delete({timeout: 15000, reason :"It had to be done."}));
+        message.channel.send(`Successfuly Muted ${toMute} for ${ms(ms(timer))}!`).then(m => m.delete({timeout: 15000, reason :"It had to be done."}));
 
         setTimeout(function(){
             toMute.roles.remove(muted);
             message.channel.send(`${toMute} has been successfully unmuted!`).then(m => m.delete({timeout: 5000, reason :"It had to be done."}));
         }, ms(timer));
-
     }
 };

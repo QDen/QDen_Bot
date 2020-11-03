@@ -15,7 +15,7 @@ q!info
 ```
 for a detailed info about our [Discord Server](https://discord.gg/ZmFgNVV)
 ### Deployment
-I was deloyed using [Heroku](https://www.heroku.com/#) that is connected to this repository.
+I was deployed using [Heroku](https://www.heroku.com/#) that is connected to this repository.
 ### Authors
 * **MahoMuri** - *Head Developer* - [Profile](https://github.com/MahoMuri)
 ### License
