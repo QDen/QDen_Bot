@@ -4,6 +4,7 @@ const { MessageEmbed } = require("discord.js");
 const mongoose = require('mongoose');
 
 const colors = require("../../colors.json");
+const { staffInfoEmbed } = require("../../functions");
 const StaffSheets = require("../../models/staffsheets");
 
 module.exports = {
@@ -38,61 +39,26 @@ module.exports = {
         if (message.mentions.members.first()) {
             toFind = message.mentions.members.first();
             const status = toFind.presence.status;
+            const active = toFind.user.presence.activities.length;
+            const activity = toFind.presence.activities[0];
 
             const staffMember = await StaffSheets.findOne({ $or: [ { name: toFind.user.username }, { uid: toFind.id } ] }).exec();
             if (staffMember) {
-                const embed = new MessageEmbed()
+                const embed = staffInfoEmbed(staffMember, message)
                     .setTitle("Staff Member found!")
                     .setColor(colors.Turquoise)
-                    .setThumbnail(toFind.user.displayAvatarURL())
-                    .addFields(
-                        {
-                            name: "Name:",
-                            value: staffMember.name,
-                            inline: true,
-                        },
-                        {
-                            name: "Age:",
-                            value: staffMember.age,
-                            inline: true,
-                        },
-                        {
-                            name: "Gender:",
-                            value: staffMember.gender,
-                            inline: true,
-                        },
-                        {
-                            name: "Position:",
-                            value: staffMember.position,
-                            inline: true,
-                        },
-                        {
-                            name: "Occupation:",
-                            value: staffMember.occupation,
-                            inline: true,
-                        },
-                        {
-                            name: "Schedule:",
-                            value: staffMember.schedule,
-                            inline: true,
-                        },
-                        {
-                            name: "Contact:",
-                            value: staffMember.contact,
-                            inline: true,
-                        },
-                        {
-                            name: "Status:",
-                            value: `${status[0].toUpperCase() + status.slice(1)}`,
-                            inline: true,
-                        },
-                        {
-                            name: "Date Modified:",
-                            value: staffMember.dateModified.map(date => date.toLocaleDateString('en-PH', options)),
-                            inline: true,
-                        }
-                    )
+                    .addField("Status: ", `${status[0].toUpperCase() + status.slice(1)}`, true)
                     .setFooter(`${bot.user.username} | MahoMuri`, bot.user.displayAvatarURL());
+                if(active) {
+                    if(activity.type === "CUSTOM_STATUS"){
+                        embed.addField(`${activity}:`,`${activity.emoji !== null ? activity.emoji.name:""} ${activity.state}`,true);
+                    }
+                    else{
+                        const presence = activity.type;
+                        embed.addField(`Currently ${presence[0] + presence.toLowerCase().slice(1)}`, stripIndents`**${presence[0] + presence.toLowerCase().slice(1)}**: ${activity}`,true);
+        
+                    }
+                }
                 message.channel.send(embed);
             } else {
                 const embed = new MessageEmbed()
@@ -110,58 +76,24 @@ module.exports = {
             if (staffMember) {
                 const member = message.guild.member(staffMember.uid);
                 const status = member.presence.status;
-                const embed = new MessageEmbed()
+                const active = member.user.presence.activities.length;
+                const activity = member.presence.activities[0];
+                const embed = staffInfoEmbed(staffMember, message)
+                    .addField("Status: ", `${status[0].toUpperCase() + status.slice(1)}`, true)
                     .setTitle("Staff Member found!")
                     .setColor(colors.Turquoise)
-                    .setThumbnail(message.guild.member(staffMember.uid).user.displayAvatarURL())
-                    .addFields(
-                        {
-                            name: "Name:",
-                            value: staffMember.name,
-                            inline: true,
-                        },
-                        {
-                            name: "Age:",
-                            value: staffMember.age,
-                            inline: true,
-                        },
-                        {
-                            name: "Gender:",
-                            value: staffMember.gender,
-                            inline: true,
-                        },
-                        {
-                            name: "Position:",
-                            value: staffMember.position,
-                            inline: true,
-                        },
-                        {
-                            name: "Occupation:",
-                            value: staffMember.occupation,
-                            inline: true,
-                        },
-                        {
-                            name: "Schedule:",
-                            value: staffMember.schedule,
-                            inline: true,
-                        },
-                        {
-                            name: "Contact:",
-                            value: staffMember.contact,
-                            inline: true,
-                        },
-                        {
-                            name: "Status:",
-                            value: `${status[0].toUpperCase() + status.slice(1)}`,
-                            inline: true,
-                        },
-                        {
-                            name: "Date Modified:",
-                            value: staffMember.dateModified.map(date => date.toLocaleDateString('en-PH', options)),
-                            inline: true,
-                        }
-                    )
                     .setFooter(`${bot.user.username} | MahoMuri`, bot.user.displayAvatarURL());
+
+                if(active) {
+                    if(activity.type === "CUSTOM_STATUS"){
+                        embed.addField(`${activity}:`,`${activity.emoji !== null ? activity.emoji.name:""} ${activity.state}`,true);
+                    }
+                    else{
+                        const presence = activity.type;
+                        embed.addField(`Currently ${presence[0] + presence.toLowerCase().slice(1)}`, stripIndents`**${presence[0] + presence.toLowerCase().slice(1)}**: ${activity}`,true);
+        
+                    }
+                }
                 message.channel.send(embed);
             } else {
                 const embed = new MessageEmbed()

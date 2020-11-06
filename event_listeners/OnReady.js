@@ -23,13 +23,20 @@ module.exports = async bot => {
             }, ms("10 minutes"));
         });
 
+        bot.error = await bot.channels.cache.find(ch => ch.id === "774273629147103283");
+
         // Initialize connection to DataBase
         await mongoose.connect(process.env.STAFF_SHEET_URI,{
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
             useFindAndModify: false
-        }).catch(err => console.log("Error on addstaff.js\n",err));
+        }).then(connection => {
+          if (connection.connections[0].readyState === 1) {
+              console.log(`✅ Successfully connected to ${connection.connections[0].name} DataBase!`);
+          }  
+        })
+        .catch(err => console.log("Error on ready event\n",err));
     
     }); 
     

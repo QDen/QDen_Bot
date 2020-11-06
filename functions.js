@@ -1,5 +1,6 @@
+const { stripIndents } = require('common-tags');
 const { MessageEmbed } = require('discord.js');
-
+const colors = require("./colors.json");
 
 function validURL(str) {
     let check;
@@ -186,6 +187,86 @@ function filterBreed(sentence, common) {
     return uncommonArr.join('-');
 }
 
+function staffInfoEmbed(staff, message) {
+    return new MessageEmbed()
+    .setThumbnail(message.guild.member(staff.uid).user.displayAvatarURL())
+    .addFields(
+        {
+            name: "Name:",
+            value: staff.name,
+            inline: true,
+        },
+        {
+            name: "Age:",
+            value: staff.age,
+            inline: true,
+        },
+        {
+            name: "Gender:",
+            value: staff.gender,
+            inline: true,
+        },
+        {
+            name: "Position:",
+            value: staff.position,
+            inline: true,
+        },
+        {
+            name: "Occupation:",
+            value: staff.occupation,
+            inline: true,
+        },
+        {
+            name: "Schedule:",
+            value: staff.schedule,
+            inline: true,
+        },
+        {
+            name: "Contact:",
+            value: staff.contact,
+            inline: true,
+        },
+    );
+}
+
+function getStaffInfo(bot, message, time, value){
+    time *= 1000;
+
+    const filter = m => m.author !== bot.user;
+    message.channel.send(`**Enter the new __${value}__ you wish to enter: (2 mins)**`);
+
+    return message.channel.awaitMessages(filter, { max: 1, time: time})
+        .then((collected) => collected.first() && collected.first().content);
+}
+
+function sendError(bot, err, message, cmd) {
+    const errEmbed = new MessageEmbed()
+        .setTitle(`Error on ${message.channel.name}!`)
+        .setDescription(stripIndents `**Something went wrong while using \`${cmd}\`!**
+
+        \`\`\`js
+        ${err}
+        \`\`\`
+        Please attend to this error ASAP!
+        `)
+        .setFooter(`${bot.user.username} | MahoMuri`, bot.user.displayAvatarURL())
+        .setTimestamp()
+        .setColor(colors.Red);
+    bot.error.send(errEmbed);
+    const embed = new MessageEmbed()
+        .setTitle("Whoops...")
+        .setDescription(stripIndents `**Something went wrong while using \`${cmd}\`!**
+
+        \`\`\`js
+        ${err}
+        \`\`\`
+        This issue has been logged, one of the Team Coders will fix this ASAP.
+        `)
+        .setFooter(`${bot.user.username} | MahoMuri`, bot.user.displayAvatarURL())
+        .setTimestamp()
+        .setColor(colors.Red);
+    message.channel.send(embed);
+}
 module.exports = {
     validURL,
     getMember,
@@ -195,7 +276,9 @@ module.exports = {
     isLeapYear,
     paginationEmbed,
     addCommas,
-    filterBreed
-
+    filterBreed,
+    staffInfoEmbed,
+    getStaffInfo,
+    sendError
 };
 

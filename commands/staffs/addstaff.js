@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const { GoogleSpreadsheet } = require("google-spreadsheet");
-const { validURL, promptMessage } = require("../../functions");
+const { validURL, promptMessage, staffInfoEmbed } = require("../../functions");
 const mongoose = require('mongoose');
 const Pagination = require("discord-paginationembed");
 
@@ -83,45 +83,7 @@ module.exports = {
                     const embeds = [];
                     if(docs.length > 0) {
                         docs.forEach((staff) => {
-                            embeds.push(new MessageEmbed()
-                            .setThumbnail(msg.guild.member(staff.uid).user.displayAvatarURL())
-                            .addFields(
-                                {
-                                    name: "Name:",
-                                    value: staff.name,
-                                    inline: true,
-                                },
-                                {
-                                    name: "Age:",
-                                    value: staff.age,
-                                    inline: true,
-                                },
-                                {
-                                    name: "Gender:",
-                                    value: staff.gender,
-                                    inline: true,
-                                },
-                                {
-                                    name: "Position:",
-                                    value: staff.position,
-                                    inline: true,
-                                },
-                                {
-                                    name: "Occupation:",
-                                    value: staff.occupation,
-                                    inline: true,
-                                },
-                                {
-                                    name: "Schedule:",
-                                    value: staff.schedule,
-                                    inline: true,
-                                },
-                                {
-                                    name: "Contact:",
-                                    value: staff.contact,
-                                    inline: true,
-                                }
-                            ));
+                            embeds.push(staffInfoEmbed(staff, message));
                         });
                     } 
 
@@ -194,7 +156,7 @@ module.exports = {
              * info[2] = Age
              * info[3] = Gender
              * info[4] = Potision
-             * info[5] = Ocuupation
+             * info[5] = Occupation
              * info[6] = Schedule
              * info[7] = Contact
              * 
@@ -207,6 +169,9 @@ module.exports = {
 
                     **The format is:**
                     \`UID | Name | Age | Gender | Position | Occupation | Schedule | Contact\`
+
+                    **or Google spread sheets link:**
+                    \`https://docs.google.com/spreadsheets/d/5pR3$d$h33t7oK3n/edit#gid=0\`
                     
                     **Please Try Again.**`)
                     .setColor(colors.Red);
@@ -220,47 +185,20 @@ module.exports = {
                 return message.channel.send(embed);
             }
 
-            const embed = new MessageEmbed()
+            const staff = {
+                uid: info[0],
+                name: info[1],
+                age: info[2],
+                gender: info[3],
+                position: info[4],
+                occupation: info[5],
+                schedule: info[6],
+                contact: info[7],
+            };
+
+            const embed = staffInfoEmbed(staff, message)
                 .setTitle("Is this correct?")
                 .setColor(colors.Turquoise)
-                .setThumbnail(message.guild.member(info[0]).user.displayAvatarURL())
-                .addFields(
-                    {
-                        name: "Name:",
-                        value: info[1],
-                        inline: true,
-                    },
-                    {
-                        name: "Age:",
-                        value: info[2],
-                        inline: true,
-                    },
-                    {
-                        name: "Gender:",
-                        value: info[3],
-                        inline: true,
-                    },
-                    {
-                        name: "Position:",
-                        value: info[4],
-                        inline: true,
-                    },
-                    {
-                        name: "Occupation:",
-                        value: info[5],
-                        inline: true,
-                    },
-                    {
-                        name: "Schedule:",
-                        value: info[6],
-                        inline: true,
-                    },
-                    {
-                        name: "Contact:",
-                        value: info[7],
-                        inline: true,
-                    }
-                )
                 .setFooter("This message becomes invalid after 2mins.");
             message.channel.send(embed).then(async (msg) => {
                 const emoji = await promptMessage(msg, message.author, 120, ["✅", "❌"]);

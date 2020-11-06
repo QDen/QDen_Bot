@@ -63,7 +63,7 @@ module.exports = async bot =>{
 
         // If a command is finally found, run the command
         if (command) {
-            command.run(bot, message, args, prefix);
+            command.run(bot, message, args, prefix, command.name);
         }
 
     });
