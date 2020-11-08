@@ -25,7 +25,7 @@ module.exports = {
             });
         }
 
-        let toFind;
+        let toFind, staffMember;
         const options = {
             weekday: 'long',
             year: 'numeric',
@@ -38,71 +38,42 @@ module.exports = {
 
         if (message.mentions.members.first()) {
             toFind = message.mentions.members.first();
-            const status = toFind.presence.status;
-            const active = toFind.user.presence.activities.length;
-            const activity = toFind.presence.activities[0];
+            staffMember = await StaffSheets.findOne({ $or: [ { name: toFind.user.username }, { uid: toFind.id } ] }).exec();
 
-            const staffMember = await StaffSheets.findOne({ $or: [ { name: toFind.user.username }, { uid: toFind.id } ] }).exec();
-            if (staffMember) {
-                const embed = staffInfoEmbed(staffMember, message)
-                    .setTitle("Staff Member found!")
-                    .setColor(colors.Turquoise)
-                    .addField("Status: ", `${status[0].toUpperCase() + status.slice(1)}`, true)
-                    .setFooter(`${bot.user.username} | MahoMuri`, bot.user.displayAvatarURL());
-                if(active) {
-                    if(activity.type === "CUSTOM_STATUS"){
-                        embed.addField(`${activity}:`,`${activity.emoji !== null ? activity.emoji.name:""} ${activity.state}`,true);
-                    }
-                    else{
-                        const presence = activity.type;
-                        embed.addField(`Currently ${presence[0] + presence.toLowerCase().slice(1)}`, stripIndents`**${presence[0] + presence.toLowerCase().slice(1)}**: ${activity}`,true);
-        
-                    }
-                }
-                message.channel.send(embed);
-            } else {
-                const embed = new MessageEmbed()
-                    .setDescription("❌ **Staff Member not found!**")
-                    .setColor(colors.Red);
-                message.channel.send(embed);
-            }
         } else {
             const regex = /\s*(?:[,|`])\s*/g;
             toFind = args.join(" ").split(regex).filter(arg => arg !== "");
-            const staffMember = await StaffSheets.findOne({ $or: [
-                { uid: toFind[0] },
-                { name: toFind[0] },
-            ] }).exec();
-            if (staffMember) {
-                const member = message.guild.member(staffMember.uid);
-                const status = member.presence.status;
-                const active = member.user.presence.activities.length;
-                const activity = member.presence.activities[0];
-                const embed = staffInfoEmbed(staffMember, message)
-                    .addField("Status: ", `${status[0].toUpperCase() + status.slice(1)}`, true)
-                    .setTitle("Staff Member found!")
-                    .setColor(colors.Turquoise)
-                    .setFooter(`${bot.user.username} | MahoMuri`, bot.user.displayAvatarURL());
-
-                if(active) {
-                    if(activity.type === "CUSTOM_STATUS"){
-                        embed.addField(`${activity}:`,`${activity.emoji !== null ? activity.emoji.name:""} ${activity.state}`,true);
-                    }
-                    else{
-                        const presence = activity.type;
-                        embed.addField(`Currently ${presence[0] + presence.toLowerCase().slice(1)}`, stripIndents`**${presence[0] + presence.toLowerCase().slice(1)}**: ${activity}`,true);
-        
-                    }
-                }
-                message.channel.send(embed);
-            } else {
-                const embed = new MessageEmbed()
-                    .setDescription("❌ **Staff Member not found!**")
-                    .setColor(colors.Red);
-                message.channel.send(embed);
-            }
+            staffMember = await StaffSheets.findOne({ $or: [ { uid: toFind[0] }, { name: toFind[0] } ] }).exec();
         }
 
+        if (staffMember) {
+            const member = message.guild.member(staffMember.uid);
+            const status = member.presence.status;
+            const active = member.user.presence.activities.length;
+            const activity = member.presence.activities[0];
+            const embed = staffInfoEmbed(staffMember, message)
+                .addField("Status: ", `${status[0].toUpperCase() + status.slice(1)}`, true)
+                .setTitle("Staff Member found!")
+                .setColor(colors.Turquoise)
+                .setFooter(`${bot.user.username} | MahoMuri`, bot.user.displayAvatarURL());
+
+            if(active) {
+                if(activity.type === "CUSTOM_STATUS"){
+                    embed.addField(`${activity}:`,`${activity.emoji !== null ? activity.emoji.name:""} ${activity.state}`,true);
+                }
+                else{
+                    const presence = activity.type;
+                    embed.addField(`Currently ${presence[0] + presence.toLowerCase().slice(1)}`, stripIndents`**${presence[0] + presence.toLowerCase().slice(1)}**: ${activity}`,true);
+    
+                }
+            }
+            message.channel.send(embed);
+        } else {
+            const embed = new MessageEmbed()
+                .setDescription("❌ **Staff Member not found!**")
+                .setColor(colors.Red);
+            message.channel.send(embed);
+        }
 
     },
 };
