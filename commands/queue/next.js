@@ -1,3 +1,4 @@
+const { stripIndents } = require('common-tags');
 const { getMember } = require('../../functions.js');
 
 module.exports = {
@@ -13,31 +14,32 @@ module.exports = {
         const member = getMember(message, args.join(" "));
 
         if (bot.queue.length === 0 && message.author !== bot.queue[0]) {
-            message.reply("The queue is empty! Go and add more people!")
+            message.reply("🙁 **The queue is empty! Go and add more people with \`q!queue or q!q\`!**")
             .then(m => m.delete({timeout: 5000, reason:"It had to be done"}));
             message.delete({timeout: 5000, reason:"It had to be done"});
             return;
         }
         else if (member.roles.cache.has(role.id) || member.roles.cache.has(dj.id)){
 
-            const performer = bot.guilds.cache.get('690499818489118722').member(bot.queue[1]);
+            const performer = bot.queue[1];
 
             if (bot.queue.length === 1) {
-                message.channel.send(`Thank you for that wonderful performance ${bot.queue[0]}! There are no more people in the queue!`)
-                .then(member.roles.remove(role));
+                message.channel.send(`👏 **Thank you for your performance ${bot.queue[0]}! There are no more people in the queue!**`)
+                .then(bot.queue[0].roles.remove(role));
                 bot.queue.shift();
 
             }
             else if (bot.queue.length > 1) {
-                message.channel.send(`Thank you for that wonderful performance ${bot.queue[0]}! Next up is ${bot.queue[1]}`)
-                .then(member.roles.remove(role)).then(performer.roles.add(role));
+                message.channel.send(stripIndents `👏 **Thank you for your performance ${bot.queue[0]}!
+                Next up is none other than ${performer}! 👏👏👏**`)
+                .then(bot.queue[0].roles.remove(role)).then(performer.roles.add(role));
                 bot.queue.shift();
 
             }
 
         }
         else{
-            message.reply(`You are currently not performing, please wait for the performer to finish or contact someone with the ${dj.name} role to fix the queue.`)
+            message.reply(`🛑 **You are currently not performing, please wait for the performer to finish or contact someone with the ${dj.name} role to fix the queue.**`)
             .then(m => m.delete({timeout: 5000, reason:"It had to be done"}));
             message.delete({timeout: 5000, reason:"It had to be done"});
         }

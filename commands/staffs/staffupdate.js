@@ -177,9 +177,19 @@ module.exports = {
                     default:
                         break;
                 }
-
-                await staffMember.save();
-                message.channel.send(`**✅ Successfully saved new changes to ${staffMember.name}**`);
+                
+                // await staffMember.updateOne(
+                //     { uid : staffMember.uid },
+                //     { $push: { dateModified: message.createdAt } }
+                // );
+                // staffMember.markModified('dateModified');
+                // console.log(staffMember);
+                const changes = staffMember.getChanges();
+                console.log(changes);
+                console.log(changes.$set);
+                message.channel.send(changes.$set);
+                // await staffMember.save();
+                // message.channel.send(`**✅ Successfully saved new changes to ${staffMember.name}**`);
             });
         }
     },

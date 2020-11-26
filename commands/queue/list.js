@@ -10,48 +10,42 @@ module.exports = {
     run: async(bot, message, args)=>{
 
         if (bot.queue.length === 0) {
-            message.reply("The queue is paking empty! Go and add more people!")
+            message.reply("🙁 **The queue is empty! Go and add more people with \`q!queue or q!q\`!**")
             .then(m => m.delete({timeout: 5000, reason:"It had to be done"}));
             message.delete({timeout: 5000, reason:"It had to be done"});
             return;
         }
 
         const role = message.guild.roles.cache.find(role => role.name === "Performer");
-        const member = bot.guilds.cache.get('690499818489118722').member(bot.queue[0]);
-        const performer = member.roles.cache.has(role.id);
+        // const member = bot.guilds.cache.get(message.guild.id).member(bot.queue[0]);
+        const performer = bot.queue[0].roles.cache.has(role.id);
 
         if (bot.queue.length > 0) {
 
             let queueList = [];
             for (let i = 0; i < bot.queue.length; i++) {
 
-                if (i === 0 && performer) {
-                    if (queueList.length === 0) {
-                        queueList = `${i + 1}. ${bot.queue[i]} (Currently Performing)\n\n`;
-                    } else{
-                        queueList = queueList + `${i + 1}. ${bot.queue[i]} (Currently Performing)\n\n`;
-                    }
+                if (queueList.length === 0 && performer) {
+                    queueList = `${i + 1}. ${bot.queue[i]}  ➡  (Currently Performing)\n\n`;
+                }
+                else if(bot.queue[i] === message.member){
+                    queueList = queueList + `${i + 1}. ${bot.queue[i]}  ⬅  You are here!\n\n`;
                 }
                 else {
-                    if (queueList.length === 0) {
-                        queueList = `${i + 1}. ${bot.queue[i]} (Currently Performing)\n\n`;
-                    } else{
-                        queueList = queueList + `${i + 1}. ${bot.queue[i]} (Currently Performing)\n\n`;
-                    }
+                    queueList = queueList + `${i + 1}. ${bot.queue[i]}\n\n`;
                 }
             }
 
             let lEmbed = new MessageEmbed()
                 .setColor(colors.Green_Sheen)
-                .setTitle("**Quareoke Den**")
+                .setTitle(`${message.guild.name}'s Queue`)
                 .setDescription(queueList)
                 .setTimestamp()
-                .setFooter("Quareoke Den | By MahoMuri");
+                .setFooter(`${bot.user.username} | By MahoMuri`, bot.user.displayAvatarURL());
 
             message.channel.send(lEmbed);
 
             message.delete({timeout: 5000, reason:"It had to be done"});
         }
-
     }
 };

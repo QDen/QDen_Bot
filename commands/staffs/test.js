@@ -2,6 +2,9 @@ const { MessageAttachment } = require("discord.js");
 const QRCode = require('easyqrcodejs-nodejs');
 const fs = require("fs");
 const ReadableData = require("stream").Readable;
+const { GoogleSpreadsheet } = require("google-spreadsheet");
+const { google } = require("googleapis");
+
 module.exports = {
     name: "test",
     aliases: [""],
@@ -9,36 +12,26 @@ module.exports = {
     description: "",
     usage: ["`-<command | alias> `"],
     async run(bot, message, args) {
-        // // Options
-        // const options = {
-        //     text: "I made it look better!",
-        //     width: 256,
-        //     height: 256,
-        //     correctLevel : QRCode.CorrectLevel.H,
-        //     dotScale: 1,
-        //     quality: 1,
-        //     quietZone: 10,
-        //     quietZoneColor: 'transparent',
-        //     logo: message.guild.iconURL({ format: "png" }),
-        // };
+        // https://docs.google.com/spreadsheets/d/15PUfYN8vta0bdWeOydwdk3HEPFZ07wHcl6Otbg04emk/edit#gid=1750226729
+        google.options({
+            auth: JSON.stringify(require("../../QDen-google.json")),
+        });
+        const sheets = google.sheets("v4");
+        const url = new URL(args.join(""));
+        const regex = /([^spreadsheets?:\/\s])([^\/\s]+)([^\/edit\s])/g;
+        const spreadsheetId = url.pathname.match(regex).join("");
+        const res = await sheets.spreadsheets.values.get(
+            {
+                spreadsheetId: spreadsheetId,
+                range: "A2:Z",
+            }
+        );
 
-        // // New instance with options
-        // const qrcode = new QRCode(options);
-
-        // // Save QRCode image
-        // qrcode.toDataURL().then(data => {
-        //     // console.log(data.replace(/^data:image\/png;base64,/, ''));
-        //     const imageBufferData = Buffer.from(data.replace(/^data:image\/png;base64,/, ''), "base64");
-
-        //     const qrcode = new MessageAttachment(imageBufferData);
-
-        //     message.channel.send(qrcode);
-
-        // });
-        const regex = /\s*(?:[,|`])\s*/g;
-        const toFind = message.mentions.members.first() || args.join(" ").split(regex).filter(arg => arg !== "");
-
-        console.log(toFind);
+        console.log(res.data.values);
+        // const auth = new google.auth.GoogleAuth({
+            
+        // })
+        // console.log(JSON.stringify(require("../../QDen-google.json")));
 
     },
 };

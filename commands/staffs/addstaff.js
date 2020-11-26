@@ -1,7 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 const { validURL, promptMessage, staffInfoEmbed } = require("../../functions");
-const mongoose = require('mongoose');
 const Pagination = require("discord-paginationembed");
 
 const StaffSheets = require("../../models/staffsheets");
