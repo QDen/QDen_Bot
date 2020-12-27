@@ -3,6 +3,9 @@ module.exports = (bot) => {
         const qtizens = newMember.guild.roles.cache.find(
             (role) => role.name === "Q-tizens"
         );
+        const unregisted = newMember.guild.roles.cache.find(
+            (role) => role.name === "Unregistered"
+        );
         const qtizenCount = newMember.guild.members.cache.map((member) =>
             member.roles.cache.has(qtizens.id)
         );
@@ -15,6 +18,7 @@ module.exports = (bot) => {
             !oldMember.roles.cache.has(qtizens.id) &&
             newMember.roles.cache.has(qtizens.id)
         ) {
+            newMember.roles.remove(unregisted);
             channelCounter.setName(`${qtizens.name}: ${qtizenCount.length}`);
         }
 
