@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const { stripIndents } = require("common-tags");
-const colors = require("../../colors.json");
+const colors = require("../../utils/colors.json");
 
 module.exports = {
     name: "report",

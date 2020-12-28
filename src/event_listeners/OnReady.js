@@ -3,7 +3,7 @@
  */
 const ms = require("ms");
 const mongoose = require("mongoose");
-const { statusMessages } = require("../statuses.json");
+const { statusMessages } = require("../utils/statuses.json");
 
 module.exports = async (bot) => {
     bot.on("ready", async () => {

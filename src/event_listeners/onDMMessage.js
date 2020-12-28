@@ -2,7 +2,7 @@
  * @file DM listener for Q-Den complaints
  */
 const { TextChannel, MessageEmbed } = require("discord.js");
-const colors = require("../colors.json");
+const colors = require("../utils/colors.json");
 
 module.exports = async (bot) => {
     bot.on("message", (message) => {

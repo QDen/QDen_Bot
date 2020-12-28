@@ -1,9 +1,9 @@
 const { MessageEmbed } = require("discord.js");
 const fs = require("fs");
-const colors = require("../../colors.json");
+const colors = require("../../utils/colors.json");
 
 const prefixes = JSON.parse(
-    fs.readFileSync(`${__dirname}/../../prefixes.json`, "utf8")
+    fs.readFileSync(`${__dirname}/../../utils/prefixes.json`, "utf8")
 );
 
 module.exports = {

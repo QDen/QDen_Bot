@@ -1,7 +1,7 @@
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
-const colors = require("../../colors.json");
-const { staffInfoEmbed } = require("../../functions");
+const colors = require("../../utils/colors.json");
+const { staffInfoEmbed } = require("../../utils/functions");
 const StaffSheets = require("../../models/staffsheets");
 
 module.exports = {

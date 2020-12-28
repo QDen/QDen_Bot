@@ -3,8 +3,8 @@ const rp = require("request-promise");
 const $ = require("cheerio");
 const queryString = require("query-string");
 const { MessageEmbed } = require("discord.js");
-const colors = require("../../colors.json");
-const { filterBreed } = require("../../functions.js");
+const colors = require("../../utils/colors.json");
+const { filterBreed } = require("../../utils/functions.js");
 
 const DOG_API_URL = "https://api.thedogapi.com/";
 const { DOG_API_KEY } = process.env;

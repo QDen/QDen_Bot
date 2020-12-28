@@ -1,7 +1,7 @@
 const r2 = require("r2");
 const queryString = require("query-string");
 const { MessageEmbed } = require("discord.js");
-const colors = require("../../colors.json");
+const colors = require("../../utils/colors.json");
 
 const CAT_API_URL = "https://api.thecatapi.com/";
 const CAT_API_KEY = process.env.CAT_API_KEY;

@@ -1,9 +1,12 @@
 const { MessageEmbed } = require("discord.js");
 
 const { stripIndents } = require("common-tags");
+const { GoogleSpreadsheet } = require("google-spreadsheet");
 const StaffSheets = require("../../models/staffsheets");
-const colors = require("../../colors.json");
-const { promptMessage, getStaffInfo } = require("../../functions");
+const colors = require("../../utils/colors.json");
+const { updateStaffInfo } = require("../../utils/UpdateStaff");
+const config = require("../../utils/botconfig.json");
+const { validURL } = require("../../utils/functions");
 
 module.exports = {
     name: "staffupdate",
@@ -22,6 +25,17 @@ module.exports = {
                 }
             });
         }
+
+        const sheets = new GoogleSpreadsheet(
+            bot.spreadsheetID !== null
+                ? bot.spreadsheetID
+                : config.default_spreadsheet
+        );
+        await sheets.useServiceAccountAuth({
+            client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+            private_key: process.env.GOOGLE_PRIVATE_KEY,
+        });
+        await sheets.loadInfo();
 
         let toModify;
         let staffMember;
@@ -47,197 +61,67 @@ module.exports = {
                 .setColor(colors.Red);
             message.channel.send(embed);
         } else {
+            // Specify which spreadsheet to work with
             const embed = new MessageEmbed()
-                .setTitle("What do you want to modify/update?\n(Choose one)")
-                .setThumbnail(
-                    message.guild
-                        .member(staffMember.uid)
-                        .user.displayAvatarURL()
-                )
+                .setTitle("**✅ Member Found!**")
                 .setDescription(
                     stripIndents`**Selected Member:** ${staffMember.name}
-                **1.** Name\n**2. **Age\n**3.** Gender\n**4.** Position\n**5.** Occupation\n**6.** Schedule\n**7.** Contact`
-                )
-                .setColor(colors.Turquoise);
-            message.channel.send(embed).then(async (msg) => {
-                const emoji = await promptMessage(msg, message.author, 120, [
-                    "1️⃣",
-                    "2️⃣",
-                    "3️⃣",
-                    "4️⃣",
-                    "5️⃣",
-                    "6️⃣",
-                    "7️⃣",
-                ]);
+                **Selected Spreadsheet:** ${sheets.title}
+                
+                **Is this the right spreadsheet? (Y/n)**`
+                );
 
-                switch (emoji) {
-                    case "1️⃣": {
-                        const name = await getStaffInfo(
-                            bot,
-                            message,
-                            120,
-                            "name"
+            message.channel.send(embed);
+            const filter = (m) => m.author !== bot.user;
+            const channel = message.channel;
+            channel
+                .awaitMessages(filter, { max: 1 })
+                .then(async (collected) => {
+                    const choice = collected
+                        .first()
+                        .content.toLowerCase()
+                        .trim();
+                    if (choice === "y" || choice === "yes") {
+                        await updateStaffInfo(bot, message, staffMember);
+                    } else if (choice === "n" || choice === "no") {
+                        channel.send(
+                            "**Please send the new Google Sheets link**"
                         );
-                        const oldName = staffMember.name;
-                        staffMember.name = name;
+                        channel
+                            .awaitMessages(filter, { max: 1 })
+                            .then(async (collected) => {
+                                const url = collected.first().content;
+                                const valid = validURL(url);
 
-                        const embedName = new MessageEmbed()
-                            .setTitle("Changed the following:")
-                            .addFields({
-                                name: "Name:",
-                                value: `${oldName}  ➡  **${staffMember.name}**`,
-                                inline: true,
-                            })
-                            .setColor(colors.Green);
-                        message.channel.send(embedName);
-                        break;
-                    }
-                    case "2️⃣": {
-                        const age = await getStaffInfo(
-                            bot,
-                            message,
-                            120,
-                            "age"
-                        );
-                        const oldAge = staffMember.age;
-                        if (parseInt(age)) {
-                            staffMember.age = age;
-                            const embedAge = new MessageEmbed()
-                                .setTitle("Changed the following:")
-                                .addFields({
-                                    name: "Name:",
-                                    value: `${oldAge}  ➡  **${staffMember.age}**`,
-                                    inline: true,
-                                })
-                                .setColor(colors.Green);
-                            message.channel.send(embedAge);
-                        } else {
-                            return message.channel.send(
-                                `❌ **Sorry, \`${age}\` is not a number.**`
-                            );
-                        }
-                        break;
-                    }
-                    case "3️⃣": {
-                        const gender = await getStaffInfo(
-                            bot,
-                            message,
-                            120,
-                            "gender"
-                        );
-                        const oldGender = staffMember.gender;
-                        staffMember.gender = gender;
+                                if (valid) {
+                                    const url = new URL(args.join(""));
+                                    const regex = /([^spreadsheets?:\/\s])([^\/\s]+)([^\/edit\s])/g;
+                                    const spreadsheetID = url.pathname
+                                        .match(regex)
+                                        .join("");
+                                    bot.spreadsheetID = spreadsheetID;
+                                    const sheets = new GoogleSpreadsheet(
+                                        spreadsheetID
+                                    );
+                                    await sheets.useServiceAccountAuth({
+                                        client_email:
+                                            process.env
+                                                .GOOGLE_SERVICE_ACCOUNT_EMAIL,
+                                        private_key:
+                                            process.env.GOOGLE_PRIVATE_KEY,
+                                    });
+                                    await sheets.loadInfo();
 
-                        const embedGender = new MessageEmbed()
-                            .setTitle("Changed the following:")
-                            .addFields({
-                                name: "Name:",
-                                value: `${oldGender}  ➡  **${staffMember.gender}**`,
-                                inline: true,
-                            })
-                            .setColor(colors.Green);
-                        message.channel.send(embedGender);
-                        break;
+                                    const embed = new MessageEmbed().setDescription(
+                                        `**Now using ${sheets.title}**`
+                                    );
+                                    message.channel.send(embed);
+                                } else {
+                                    // TODO: Figure out how to repeat this check in case of human error
+                                }
+                            });
                     }
-
-                    case "4️⃣": {
-                        const position = await getStaffInfo(
-                            bot,
-                            message,
-                            120,
-                            "position"
-                        );
-                        const oldPosition = staffMember.position;
-                        staffMember.position = position;
-                        const embedPosition = new MessageEmbed()
-                            .setTitle("Changed the following:")
-                            .addFields({
-                                name: "Name:",
-                                value: `${oldPosition}  ➡  **${staffMember.position}**`,
-                                inline: true,
-                            })
-                            .setColor(colors.Green);
-                        message.channel.send(embedPosition);
-                        break;
-                    }
-                    case "5️⃣": {
-                        const occupation = await getStaffInfo(
-                            bot,
-                            message,
-                            120,
-                            "occupation"
-                        );
-                        const oldOccupation = staffMember.occupation;
-                        staffMember.occupation = occupation;
-                        const embedOccupation = new MessageEmbed()
-                            .setTitle("Changed the following:")
-                            .addFields({
-                                name: "Name:",
-                                value: `${oldOccupation}  ➡  **${staffMember.occupation}**`,
-                                inline: true,
-                            })
-                            .setColor(colors.Green);
-                        message.channel.send(embedOccupation);
-                        break;
-                    }
-                    case "6️⃣": {
-                        const schedule = await getStaffInfo(
-                            bot,
-                            message,
-                            120,
-                            "schedule"
-                        );
-                        const oldSchedule = staffMember.schedule;
-                        staffMember.schedule = schedule;
-                        const embedSchedule = new MessageEmbed()
-                            .setTitle("Changed the following:")
-                            .addFields({
-                                name: "Name:",
-                                value: `${oldSchedule}  ➡  **${staffMember.schedule}**`,
-                                inline: true,
-                            })
-                            .setColor(colors.Green);
-                        message.channel.send(embedSchedule);
-                        break;
-                    }
-                    case "7️⃣": {
-                        const contact = await getStaffInfo(
-                            bot,
-                            message,
-                            120,
-                            "contact"
-                        );
-                        const oldContact = staffMember.contact;
-                        staffMember.contact = contact;
-                        const embedContact = new MessageEmbed()
-                            .setTitle("Changed the following:")
-                            .addFields({
-                                name: "Name:",
-                                value: `${oldContact}  ➡  **${staffMember.contact}**`,
-                                inline: true,
-                            })
-                            .setColor(colors.Green);
-                        message.channel.send(embedContact);
-                        break;
-                    }
-
-                    default:
-                        break;
-                }
-
-                // await staffMember.updateOne(
-                //     { uid : staffMember.uid },
-                //     { $push: { dateModified: message.createdAt } }
-                // );
-                // staffMember.markModified('dateModified');
-                // console.log(staffMember);
-                const changes = staffMember.getChanges();
-                console.log(changes);
-                console.log(changes.$set);
-                message.channel.send(changes.$set);
-                // await staffMember.save();
-                // message.channel.send(`**✅ Successfully saved new changes to ${staffMember.name}**`);
-            });
+                });
         }
     },
 };

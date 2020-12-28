@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 
-const colors = require("../../colors.json");
+const colors = require("../../utils/colors.json");
 
 module.exports = {
     name: "serverinfo",

@@ -4,7 +4,7 @@
 const { DMChannel } = require("discord.js");
 const fs = require("fs");
 
-const { default_prefix } = require(`${__dirname}/../botprefix.json`);
+const { default_prefix } = require(`${__dirname}/../utils/botconfig.json`);
 
 module.exports = async (bot) => {
     bot.on("message", async (message) => {
@@ -13,7 +13,7 @@ module.exports = async (bot) => {
         }
 
         const prefixes = JSON.parse(
-            fs.readFileSync(`${__dirname}/../prefixes.json`, "utf8")
+            fs.readFileSync(`${__dirname}/../utils/prefixes.json`, "utf8")
         );
 
         if (!prefixes[message.guild.id]) {
@@ -22,7 +22,7 @@ module.exports = async (bot) => {
             };
 
             fs.writeFileSync(
-                `${__dirname}/../prefixes.json`,
+                `${__dirname}/../utils/prefixes.json`,
                 JSON.stringify(prefixes)
             );
         }

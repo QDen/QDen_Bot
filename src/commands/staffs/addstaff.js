@@ -3,10 +3,14 @@ const { GoogleSpreadsheet } = require("google-spreadsheet");
 const Pagination = require("discord-paginationembed");
 const { stripIndents } = require("common-tags");
 const ms = require("ms");
-const { validURL, promptMessage, staffInfoEmbed } = require("../../functions");
+const {
+    validURL,
+    promptMessage,
+    staffInfoEmbed,
+} = require("../../utils/functions");
 
 const StaffSheets = require("../../models/staffsheets");
-const colors = require("../../colors.json");
+const colors = require("../../utils/colors.json");
 
 module.exports = {
     name: "addstaff",
@@ -26,13 +30,15 @@ module.exports = {
             });
         }
 
+        console.log(args.join(""));
         const valid = validURL(args.join(""));
 
         if (valid) {
             const url = new URL(args.join(""));
             const regex = /([^spreadsheets?:\/\s])([^\/\s]+)([^\/edit\s])/g;
-            const spreadsheetId = url.pathname.match(regex).join("");
-            const sheets = new GoogleSpreadsheet(spreadsheetId);
+            const spreadsheetID = url.pathname.match(regex).join("");
+            bot.spreadsheetID = spreadsheetID;
+            const sheets = new GoogleSpreadsheet(spreadsheetID);
             await sheets.useServiceAccountAuth({
                 client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
                 private_key: process.env.GOOGLE_PRIVATE_KEY,

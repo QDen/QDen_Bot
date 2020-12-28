@@ -4,8 +4,8 @@ const ms = require("ms");
 
 const { stripIndents } = require("common-tags");
 const StaffSheets = require("../../models/staffsheets");
-const colors = require("../../colors.json");
-const { staffInfoEmbed } = require("../../functions");
+const colors = require("../../utils/colors.json");
+const { staffInfoEmbed } = require("../../utils/functions");
 
 module.exports = {
     name: "stafflist",

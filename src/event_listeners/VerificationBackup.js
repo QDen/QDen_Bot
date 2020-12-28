@@ -1,9 +1,11 @@
 const { MessageEmbed } = require("discord.js");
 
-const colors = require(`../colors.json`);
 const fs = require("fs");
+const colors = require("../utils/colors.json");
 
-const bots = JSON.parse(fs.readFileSync(`${__dirname}/../bots.json`, "utf-8"));
+const bots = JSON.parse(
+    fs.readFileSync(`${__dirname}/../utils/bots.json`, "utf-8")
+);
 
 module.exports = (bot) => {
     bot.on("messageReactionAdd", async (reaction, user) => {

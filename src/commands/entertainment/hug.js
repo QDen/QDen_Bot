@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { MessageEmbed } = require("discord.js");
-const colors = require("../../colors.json");
-const { getMember } = require("../../functions.js");
+const colors = require("../../utils/colors.json");
+const { getMember } = require("../../utils/functions.js");
 
 module.exports = {
     name: "hug",

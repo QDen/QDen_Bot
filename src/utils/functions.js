@@ -7,9 +7,10 @@ class Utilities {
     static validURL(str) {
         let check;
         try {
-            URL(str);
+            new URL(str);
             check = true;
         } catch (error) {
+            console.log(error);
             check = false;
         }
 
@@ -250,13 +251,22 @@ class Utilities {
             );
     }
 
-    static getStaffInfo(bot, message, time, value) {
+    static getStaffInfo(bot, message, time, value, originalValue, staffMember) {
         time *= 1000;
 
         const filter = (m) => m.author !== bot.user;
-        message.channel.send(
-            `**Enter the new __${value}__ you wish to enter: (2 mins)**`
-        );
+        const embed = new MessageEmbed()
+            .setTitle(`Changing ${value}.`)
+            .setThumbnail(
+                message.guild.member(staffMember.uid).user.displayAvatarURL()
+            )
+            .setDescription(
+                stripIndents`*Original value: ${originalValue}*
+
+                **Please enter the new __${value}__ you wish to enter:**`
+            )
+            .setFooter("Message becomes invalid after 2 mins");
+        message.channel.send(embed);
 
         return message.channel
             .awaitMessages(filter, { max: 1, time })

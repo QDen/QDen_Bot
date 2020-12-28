@@ -2,7 +2,7 @@
  * @file premiumTier listener
  */
 const { MessageEmbed } = require("discord.js");
-const colors = require("../colors.json");
+const colors = require("../utils/colors.json");
 
 module.exports = async (bot) => {
     bot.on("guildUpdate", async (oldGuild, newGuild) => {

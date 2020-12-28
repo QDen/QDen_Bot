@@ -19,6 +19,7 @@ bot.categories = readdirSync(`${__dirname}/commands/`);
 bot.commands = new Collection();
 bot.queue = [];
 bot.error = null;
+bot.spreadsheetID = null;
 
 // Setup configuration
 config({
