@@ -28,7 +28,7 @@ module.exports = (bot) => {
                 };
 
                 fs.writeFileSync(
-                    "./bots.json",
+                    `${__dirname}/../utils/bots.json`,
                     JSON.stringify(bots, null, "\t")
                 );
             }
@@ -37,7 +37,7 @@ module.exports = (bot) => {
                 bots[newPresence.userID].status = newPresence.status;
 
                 fs.writeFileSync(
-                    "./bots.json",
+                    `${__dirname}/../utils/bots.json`,
                     JSON.stringify(bots, null, "\t")
                 );
             }
@@ -66,7 +66,7 @@ module.exports = (bot) => {
                 };
 
                 fs.writeFileSync(
-                    "./bots.json",
+                    `${__dirname}/../utils/bots.json`,
                     JSON.stringify(bots, null, "\t")
                 );
             }
@@ -75,7 +75,7 @@ module.exports = (bot) => {
                 bots[newPresence.userID].status = newPresence.status;
 
                 fs.writeFileSync(
-                    "./bots.json",
+                    `${__dirname}/../utils/bots.json`,
                     JSON.stringify(bots, null, "\t")
                 );
             }

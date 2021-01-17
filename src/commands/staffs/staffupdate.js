@@ -1,12 +1,10 @@
 const { MessageEmbed } = require("discord.js");
 
-const { stripIndents } = require("common-tags");
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 const StaffSheets = require("../../models/staffsheets");
 const colors = require("../../utils/colors.json");
 const { updateStaffInfo } = require("../../utils/UpdateStaff");
 const config = require("../../utils/botconfig.json");
-const { validURL } = require("../../utils/functions");
 
 module.exports = {
     name: "staffupdate",
@@ -62,66 +60,19 @@ module.exports = {
             message.channel.send(embed);
         } else {
             // Specify which spreadsheet to work with
+            const sheets = new GoogleSpreadsheet(config.default_spreadsheet);
+            await sheets.useServiceAccountAuth({
+                client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+                private_key: process.env.GOOGLE_PRIVATE_KEY,
+            });
+            await sheets.loadInfo();
+
             const embed = new MessageEmbed()
-                .setTitle("**✅ Member Found!**")
-                .setDescription(
-                    stripIndents`**Selected Member:** ${staffMember.name}
-                **Selected Spreadsheet:** ${sheets.title}
-                
-                **Is this the right spreadsheet? (Y/n)**`
-                );
-
+                .setTitle("Spreadsheet Link Established!")
+                .setColor(colors.Green)
+                .setDescription(`**Now using ${sheets.title}**`);
             message.channel.send(embed);
-            const filter = (m) => m.author !== bot.user;
-            const channel = message.channel;
-            channel
-                .awaitMessages(filter, { max: 1 })
-                .then(async (collected) => {
-                    const choice = collected
-                        .first()
-                        .content.toLowerCase()
-                        .trim();
-                    if (choice === "y" || choice === "yes") {
-                        await updateStaffInfo(bot, message, staffMember);
-                    } else if (choice === "n" || choice === "no") {
-                        channel.send(
-                            "**Please send the new Google Sheets link**"
-                        );
-                        channel
-                            .awaitMessages(filter, { max: 1 })
-                            .then(async (collected) => {
-                                const url = collected.first().content;
-                                const valid = validURL(url);
-
-                                if (valid) {
-                                    const url = new URL(args.join(""));
-                                    const regex = /([^spreadsheets?:\/\s])([^\/\s]+)([^\/edit\s])/g;
-                                    const spreadsheetID = url.pathname
-                                        .match(regex)
-                                        .join("");
-                                    bot.spreadsheetID = spreadsheetID;
-                                    const sheets = new GoogleSpreadsheet(
-                                        spreadsheetID
-                                    );
-                                    await sheets.useServiceAccountAuth({
-                                        client_email:
-                                            process.env
-                                                .GOOGLE_SERVICE_ACCOUNT_EMAIL,
-                                        private_key:
-                                            process.env.GOOGLE_PRIVATE_KEY,
-                                    });
-                                    await sheets.loadInfo();
-
-                                    const embed = new MessageEmbed().setDescription(
-                                        `**Now using ${sheets.title}**`
-                                    );
-                                    message.channel.send(embed);
-                                } else {
-                                    // TODO: Figure out how to repeat this check in case of human error
-                                }
-                            });
-                    }
-                });
+            await updateStaffInfo(bot, message, staffMember, sheets);
         }
     },
 };

@@ -10,7 +10,6 @@ class Utilities {
             new URL(str);
             check = true;
         } catch (error) {
-            console.log(error);
             check = false;
         }
 
@@ -315,6 +314,10 @@ class Utilities {
             .setTimestamp()
             .setColor(colors.Red);
         message.channel.send(embed);
+    }
+
+    static toSentenceCase(sentence) {
+        return sentence[0].toUpperCase() + sentence.slice(1);
     }
 }
 

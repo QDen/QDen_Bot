@@ -4,7 +4,13 @@ const colors = require("./colors.json");
 const Utilities = require("./functions");
 
 class UpdateStaff {
-    static async updateStaffInfo(bot, message, staffMember) {
+    static async updateStaffInfo(bot, message, staffMember, doc) {
+        // Initialize the row first and isolate the member to be updated
+        const sheet = doc.sheetsByIndex[0];
+        const rows = await sheet.getRows();
+        const row = rows.find((r) => r.UID === staffMember.uid);
+
+        // Start the update process
         const embed = new MessageEmbed()
             .setTitle("What do you want to modify/update?\n(Choose one)")
             .setThumbnail(
@@ -36,6 +42,8 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.name = name;
+                    staffMember.dateModified.push(message.createdAt);
+                    row.Name = name;
                     break;
                 }
                 case "2️⃣": {
@@ -50,6 +58,8 @@ class UpdateStaff {
                     );
                     if (parseInt(age)) {
                         staffMember.age = age;
+                        staffMember.dateModified.push(message.createdAt);
+                        row.Age = age;
                     } else {
                         return message.channel.send(
                             `❌ **Sorry, \`${age}\` is not a number.**`
@@ -68,6 +78,8 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.gender = gender;
+                    staffMember.dateModified.push(message.createdAt);
+                    row.Gender = gender;
                     break;
                 }
 
@@ -82,6 +94,8 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.position = position;
+                    staffMember.dateModified.push(message.createdAt);
+                    row.Position = position;
                     break;
                 }
                 case "5️⃣": {
@@ -95,6 +109,8 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.occupation = occupation;
+                    staffMember.dateModified.push(message.createdAt);
+                    row.Occupation = occupation;
                     break;
                 }
                 case "6️⃣": {
@@ -108,6 +124,8 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.schedule = schedule;
+                    staffMember.dateModified.push(message.createdAt);
+                    row.Schedule = schedule;
                     break;
                 }
                 case "7️⃣": {
@@ -121,26 +139,37 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.contact = contact;
+                    staffMember.dateModified.push(message.createdAt);
+                    row.Contact = contact;
                     break;
                 }
                 default:
                     break;
             }
 
+            // Gets the changes here.
             const changes = staffMember.getChanges();
+
+            // This checks if there is a change or not.
             if (Object.keys(changes).length !== 0) {
                 const key = Object.keys(changes.$set);
                 const value = Object.values(changes.$set);
                 console.log(`Made changes on ${key}: ${oldValue} => ${value}`);
+                // Send the confirmation that something was changed.
                 const embed = new MessageEmbed()
                     .setTitle("Changed the following:")
                     .addFields({
-                        name: "Name:",
+                        name: `${Utilities.toSentenceCase(key.join(""))}:`,
                         value: `${oldValue}  ➡  **${value}**`,
                         inline: true,
                     })
                     .setColor(colors.Green);
                 message.channel.send(embed);
+                await row.save();
+                await staffMember.save();
+                message.channel.send(
+                    `**✅ Successfully saved new changes to ${staffMember.name}**`
+                );
             } else {
                 const embed = new MessageEmbed()
                     .setTitle("No Changes Detected!")
@@ -150,8 +179,6 @@ class UpdateStaff {
                     );
                 message.channel.send(embed);
             }
-            // await staffMember.save();
-            // message.channel.send(`**✅ Successfully saved new changes to ${staffMember.name}**`);
         });
     }
 }

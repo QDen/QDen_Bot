@@ -47,41 +47,31 @@ module.exports = {
             message.channel
                 .send(`**Verifying** \`${args.join("")}\``)
                 .then(async (msg) => {
-                    const staffInfos = [];
                     try {
                         await sheets.loadInfo();
                         const firstSheet = sheets.sheetsByIndex[0];
-                        const rows = await firstSheet.getRows();
-                        rows.forEach((row) => {
-                            staffInfos.push({
-                                uid: row.UID,
-                                name: row.Name,
-                                age: row.Age,
-                                gender: row.Gender,
-                                position: row.Position,
-                                occupation: row.Occupation,
-                                schedule: row.Schedule,
-                                contact: row.Contact,
-                            });
-                        });
+                        const rows = await firstSheet.getRows(); // Gets the rows for the spreadsheet
 
+                        // // Extracts the contents of each row and pushes them into docs array
                         const docs = [];
                         await Promise.all(
-                            staffInfos.map(async (staff) => {
+                            // Map the rows here
+                            rows.map(async (staff) => {
                                 await StaffSheets.exists({
                                     name: staff.name,
                                 }).then(async (doc) => {
                                     if (!doc) {
+                                        // Pushed a new Staffsheet schema directly into docs array.
                                         docs.push(
                                             new StaffSheets({
-                                                uid: staff.uid,
-                                                name: staff.name,
-                                                age: staff.age,
-                                                gender: staff.gender,
-                                                position: staff.position,
-                                                occupation: staff.occupation,
-                                                schedule: staff.schedule,
-                                                contact: staff.contact,
+                                                uid: staff.UID,
+                                                name: staff.Name,
+                                                age: staff.Age,
+                                                gender: staff.Gender,
+                                                position: staff.Position,
+                                                occupation: staff.Occupation,
+                                                schedule: staff.Schedule,
+                                                contact: staff.Contact,
                                                 dateModified: message.createdAt,
                                             })
                                         );
@@ -93,6 +83,7 @@ module.exports = {
                         const embeds = [];
                         if (docs.length > 0) {
                             docs.forEach((staff) => {
+                                // console.log(staff);
                                 embeds.push(staffInfoEmbed(staff, message));
                             });
                         }

@@ -1,11 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 
-const fs = require("fs");
 const colors = require("../utils/colors.json");
-
-const bots = JSON.parse(
-    fs.readFileSync(`${__dirname}/../utils/bots.json`, "utf-8")
-);
 
 module.exports = (bot) => {
     bot.on("messageReactionAdd", async (reaction, user) => {
@@ -13,10 +8,8 @@ module.exports = (bot) => {
             .find((role) => role.name === "BOTS")
             .members.find((m) => m.user.username === "Carl-bot");
 
-        if (
-            bots[carlbot.user.id] &&
-            bots[carlbot.user.id].status === "online"
-        ) {
+        // Checks if carl bot is offline
+        if (carlbot.presence.status === "offline") {
             const logChannel = await bot.channels.cache.get(
                 "694217906296455188"
             );
