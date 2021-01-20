@@ -5,4 +5,3 @@ Start_bot.bat
 template.config.js
 mongodbURI.json
 QDen-google.json
-src/utils/bots.json
