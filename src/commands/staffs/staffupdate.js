@@ -59,14 +59,6 @@ module.exports = {
                 .setColor(colors.Red);
             message.channel.send(embed);
         } else {
-            // Specify which spreadsheet to work with
-            const sheets = new GoogleSpreadsheet(config.default_spreadsheet);
-            await sheets.useServiceAccountAuth({
-                client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-                private_key: process.env.GOOGLE_PRIVATE_KEY,
-            });
-            await sheets.loadInfo();
-
             const embed = new MessageEmbed()
                 .setTitle("Spreadsheet Link Established!")
                 .setColor(colors.Green)

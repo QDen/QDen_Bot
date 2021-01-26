@@ -34,48 +34,53 @@ module.exports = {
                 .setColor(colors.Red);
             return message.channel.send(embed);
         }
+
         staffMembers.forEach((staff) => {
             const member = message.guild.member(staff.uid);
-            const active = member.user.presence.activities.length;
-            const activity = member.presence.activities[0];
-            const status = member.presence.status;
+            if (member) {
+                const active = member.user.presence.activities.length;
+                const activity = member.presence.activities[0];
+                const status = member.presence.status;
 
-            const embed = staffInfoEmbed(staff, message)
-                .setTitle("Q-Den Staff Members")
-                .addField(
-                    "Status: ",
-                    `${status[0].toUpperCase() + status.slice(1)}`,
-                    true
-                );
-
-            if (active) {
-                if (activity.type === "CUSTOM_STATUS") {
-                    embed.addField(
-                        `${activity}:`,
-                        `${
-                            activity.emoji !== null ? activity.emoji.name : ""
-                        } ${activity.state}`,
+                const embed = staffInfoEmbed(staff, message)
+                    .setTitle("Q-Den Staff Members")
+                    .addField(
+                        "Status: ",
+                        `${status[0].toUpperCase() + status.slice(1)}`,
                         true
                     );
-                } else {
-                    const presence = activity.type;
-                    embed.addField(
-                        `Currently ${
-                            presence[0] + presence.toLowerCase().slice(1)
-                        }`,
-                        stripIndents`**${
-                            presence[0] + presence.toLowerCase().slice(1)
-                        }**: ${activity}`,
-                        true
-                    );
+
+                if (active) {
+                    if (activity.type === "CUSTOM_STATUS") {
+                        embed.addField(
+                            `${activity}:`,
+                            `${
+                                activity.emoji !== null
+                                    ? activity.emoji.name
+                                    : ""
+                            } ${activity.state}`,
+                            true
+                        );
+                    } else {
+                        const presence = activity.type;
+                        embed.addField(
+                            `Currently ${
+                                presence[0] + presence.toLowerCase().slice(1)
+                            }`,
+                            stripIndents`**${
+                                presence[0] + presence.toLowerCase().slice(1)
+                            }**: ${activity}`,
+                            true
+                        );
+                    }
                 }
+                embeds.push(embed);
             }
-            embeds.push(embed);
         });
 
         await message.channel.send(
-            `✅ **Showing ${staffMembers.length} staff member${
-                staffMembers.length === 1 ? "" : "s"
+            `✅ **Showing ${embeds.length} staff member${
+                embeds.length === 1 ? "" : "s"
             }!**`
         );
         new Pagination.Embeds()

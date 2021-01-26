@@ -18,7 +18,15 @@ class UpdateStaff {
             )
             .setDescription(
                 stripIndents`**Selected Member:** ${staffMember.name}
-                **1.** Name\n**2. **Age\n**3.** Gender\n**4.** Position\n**5.** Occupation\n**6.** Schedule\n**7.** Contact`
+                **1.** Name
+                **2.** Age
+                **3.** Gender
+                **4.** Position
+                **5.** Occupation
+                **6.** Schedule
+                **7.** Contact
+
+                **Click ❌ to Cancel**`
             )
             .setColor(colors.Turquoise);
         message.channel.send(embed).then(async (msg) => {
@@ -26,7 +34,7 @@ class UpdateStaff {
                 msg,
                 message.author,
                 120,
-                ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"]
+                ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "❌"]
             );
 
             let oldValue;
@@ -42,7 +50,6 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.name = name;
-                    staffMember.dateModified.push(message.createdAt);
                     row.Name = name;
                     break;
                 }
@@ -58,7 +65,6 @@ class UpdateStaff {
                     );
                     if (parseInt(age)) {
                         staffMember.age = age;
-                        staffMember.dateModified.push(message.createdAt);
                         row.Age = age;
                     } else {
                         return message.channel.send(
@@ -78,7 +84,6 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.gender = gender;
-                    staffMember.dateModified.push(message.createdAt);
                     row.Gender = gender;
                     break;
                 }
@@ -94,7 +99,6 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.position = position;
-                    staffMember.dateModified.push(message.createdAt);
                     row.Position = position;
                     break;
                 }
@@ -109,7 +113,6 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.occupation = occupation;
-                    staffMember.dateModified.push(message.createdAt);
                     row.Occupation = occupation;
                     break;
                 }
@@ -124,7 +127,6 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.schedule = schedule;
-                    staffMember.dateModified.push(message.createdAt);
                     row.Schedule = schedule;
                     break;
                 }
@@ -139,9 +141,12 @@ class UpdateStaff {
                         staffMember
                     );
                     staffMember.contact = contact;
-                    staffMember.dateModified.push(message.createdAt);
                     row.Contact = contact;
                     break;
+                }
+                case "❌": {
+                    message.channel.send("**❌ Cancelled!**");
+                    return;
                 }
                 default:
                     break;
@@ -165,6 +170,7 @@ class UpdateStaff {
                     })
                     .setColor(colors.Green);
                 message.channel.send(embed);
+                await staffMember.dateModified.push(message.createdAt);
                 await row.save();
                 await staffMember.save();
                 message.channel.send(
