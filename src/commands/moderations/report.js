@@ -73,7 +73,7 @@ module.exports = {
 
         message
             .reply(
-                "Thank you for reporting! The Modmins or Mods will now review your report. Good Day!"
+                "Thank you for reporting! The Staffs will now review your report. Good Day!"
             )
             .then((m) =>
                 m.delete({ timeout: 5000, reason: "It had to be done." })

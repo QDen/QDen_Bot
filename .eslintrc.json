@@ -21,5 +21,9 @@
         "no-new":"off",
         "no-restricted-globals":"off"
 
+    },
+    "globals": {
+        "ms": true,
+        "colors": true
     }
 }

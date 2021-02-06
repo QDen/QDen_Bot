@@ -14,16 +14,17 @@ module.exports = {
     description: "Sends a message about the current status of COVID-19",
     usage: ["q!<command | alias>"],
     run: async (bot, message) => {
-        const guild = bot.guilds.cache.get("690499818489118722");
-        const channel = guild.channels.cache.find(
-            (c) => c.id === "739175214344044586"
-        );
+        const channel = message.channel;
+        // message.guild.channels.cache.find(
+        //     (c) => c.id === "739175214344044586"
+        // );
 
         const title = [];
         const data = [];
         const embed = new MessageEmbed();
 
         message.react("👌");
+        channel.startTyping();
         rp(url)
             .then((html) => {
                 let allCases = 0;
@@ -84,8 +85,6 @@ module.exports = {
                         `Q-Den | By MahoMuri`,
                         bot.user.displayAvatarURL()
                     );
-
-                channel.startTyping();
             })
             .catch((err) => {
                 // handle error
@@ -140,7 +139,7 @@ module.exports = {
                             }
                         );
                         await channel.send(embed);
-                        channel.stopTyping();
+                        await channel.stopTyping(true);
                         message.delete();
                     })
                     .catch((err) => {
