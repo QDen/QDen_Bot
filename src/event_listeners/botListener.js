@@ -10,7 +10,7 @@ const bots = JSON.parse(
 module.exports = (bot) => {
     bot.on("presenceUpdate", async (oldPresence, newPresence) => {
         if (
-            newPresence.member.roles.cache.has("805793096490549259") &&
+            newPresence.member.roles.cache.has("690513243063451649") &&
             newPresence.status === "online"
         ) {
             if (
@@ -44,7 +44,7 @@ module.exports = (bot) => {
 
             if (newPresence.user.username === "Carl-bot") {
                 const staffchat = await newPresence.guild.channels.cache.find(
-                    (c) => c.id === "805793217090027561"
+                    (c) => c.id === "690507342222983168"
                 );
                 const embed = new MessageEmbed()
                     .setTitle(`${newPresence.user.username} is now online!`)
@@ -55,7 +55,7 @@ module.exports = (bot) => {
                 staffchat.send(embed);
             }
         } else if (
-            newPresence.member.roles.cache.has("805793096490549259") &&
+            newPresence.member.roles.cache.has("690513243063451649") &&
             newPresence.status === "offline"
         ) {
             console.log(`${newPresence.user.username} has gone offline`);
@@ -82,7 +82,7 @@ module.exports = (bot) => {
 
             if (newPresence.user.username === "Carl-bot") {
                 const staffchat = await newPresence.guild.channels.cache.find(
-                    (c) => c.id === "805793217090027561"
+                    (c) => c.id === "690507342222983168"
                 );
                 const embed = new MessageEmbed()
                     .setTitle(`${newPresence.user.username} has gone offline!`)

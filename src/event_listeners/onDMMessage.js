@@ -15,7 +15,7 @@ module.exports = async (bot) => {
 
             const guild = bot.guilds.cache.get("690499818489118722");
             const channel = guild.channels.cache.find(
-                (c) => c.id === "805793150815436801"
+                (c) => c.id === "692411870417780786"
             );
 
             message.reply("**Hello there, please type your complaint now.**");

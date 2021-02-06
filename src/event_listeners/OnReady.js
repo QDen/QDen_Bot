@@ -27,7 +27,7 @@ module.exports = async (bot) => {
         const logChannel = await bot.channels.cache.get("694217906296455188");
         const logMsg = `✅ **${bot.user.username} Bot is online!**`;
 
-        // logChannel.send(logMsg);
+        logChannel.send(logMsg);
         console.log(logMsg);
         bot.user
             .setActivity(" q!help | with you", {

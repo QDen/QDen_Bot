@@ -7,8 +7,6 @@ const Ascii = require("ascii-table");
 const { Client, Collection } = require("discord.js");
 const { config } = require("dotenv");
 const { readdirSync } = require("fs");
-global.ms = require("ms");
-global.colors = require("./utils/colors.json");
 
 // Setup bot
 const bot = new Client({

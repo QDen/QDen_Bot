@@ -6,7 +6,7 @@ const colors = require("../utils/colors.json");
 
 module.exports = async (bot) => {
     bot.on("guildUpdate", async (oldGuild, newGuild) => {
-        const channel = bot.channels.cache.get("805793146294108210");
+        const channel = bot.channels.cache.get("740615971038822500");
         const oldCount = oldGuild.premiumSubscriptionCount;
         const newCount = newGuild.premiumSubscriptionCount;
         const date = new Date(Date.now());
