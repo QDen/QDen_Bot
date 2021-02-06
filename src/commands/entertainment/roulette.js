@@ -26,7 +26,14 @@ module.exports = {
 
         // console.log(channel);
 
-        const members = await channel.members.map((member) => member);
+        const excluded = [
+            '613742642404261889', // ming
+        ];
+
+        const members = await channel.members.filter(member => {
+            if (excluded.includes(member.id)) return false;
+            return true;
+        }).map((member) => member);
 
         const member =
             members[Math.floor(Math.random() * Math.floor(members.length))];
