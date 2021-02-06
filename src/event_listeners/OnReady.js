@@ -24,7 +24,7 @@ module.exports = async (bot) => {
             })
             .catch((err) => console.log("Error on staffsheet\n", err));
 
-        const logChannel = await bot.channels.cache.get("694217906296455188");
+        // const logChannel = await bot.channels.cache.get("694217906296455188");
         const logMsg = `✅ **${bot.user.username} Bot is online!**`;
 
         logChannel.send(logMsg);
