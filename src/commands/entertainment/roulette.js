@@ -1,6 +1,11 @@
 const { MessageEmbed } = require("discord.js");
+const { readFileSync, writeFileSync } = require("fs");
 
 const colors = require("../../utils/colors.json");
+
+const cache = JSON.parse(
+    readFileSync(`${__dirname}/../../utils/roulettecache.json`)
+);
 
 module.exports = {
     name: "roulette",
@@ -20,21 +25,77 @@ module.exports = {
             });
         }
 
-        message.channel.send("Yeeting someone in the Voice Channel...");
+        // message.channel.send("Yeeting someone in the Voice Channel...");
 
         const channel = message.member.voice.channel;
 
-        // console.log(channel);
+        const excluded = [
+            "613742642404261889", // ming
+            "318623486069309452", // lans
+            "259313335076519936", // well... me. duh.
+        ];
 
-        const members = await channel.members.map((member) => member);
+        const members = await channel.members
+            .map((member) => member)
+            .filter((member) => !excluded.includes(member.id))
+            .map((member) => {
+                if (!cache[member.id]) {
+                    cache[member.id] = {
+                        name: member.user.username,
+                        yeeted: false,
+                    };
+                    writeFileSync(
+                        "./src/utils/roulettecache.json",
+                        JSON.stringify(cache, null, 2),
+                        (err) => {
+                            if (err) {
+                                console.error(err);
+                            }
+                        }
+                    );
+                }
 
-        const member =
-            members[Math.floor(Math.random() * Math.floor(members.length))];
+                return member;
+            })
+            .filter((member) => !cache[member.id].yeeted);
 
-        // console.log(member.voice.connection);
+        if (members.length) {
+            const member =
+                members[Math.floor(Math.random() * Math.floor(members.length))];
 
-        member.voice.kick();
+            console.log(member.user.username);
+            // member.voice.kick();
+            // message.channel.send(`Yeeted ${member} from the VC! HAHAHAHA`);
+            cache[member.id].yeeted = true;
+            cache[member.id].yeetedAt = new Date().getTime();
+            writeFileSync(
+                "./src/utils/roulettecache.json",
+                JSON.stringify(cache, null, 2),
+                (err) => {
+                    if (err) {
+                        console.error(err);
+                    }
+                }
+            );
+            setTimeout(async () => {
+                cache[member.id].yeeted = false;
+                cache[member.id].unYeetedAt = new Date().getTime();
+                writeFileSync(
+                    "./src/utils/roulettecache.json",
+                    JSON.stringify(cache, null, 2),
+                    (err) => {
+                        if (err) {
+                            console.error(err);
+                        }
+                    }
+                );
+            }, ms("30s"));
 
-        message.channel.send(`Yeeted ${member} from the VC! HAHAHAHA`);
+            console.log(cache);
+        } else {
+            message.channel.send(
+                "❌ **Everyone has been yeeted at least once, please try again in 30 seconds**"
+            );
+        }
     },
 };
