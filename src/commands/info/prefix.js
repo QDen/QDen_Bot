@@ -35,8 +35,8 @@ module.exports = {
                 };
 
                 fs.writeFileSync(
-                    "./prefixes.json",
-                    JSON.stringify(prefixes),
+                    "./src/utils/prefixes.json",
+                    JSON.stringify(prefixes, null, 2),
                     (err) => {
                         if (err) {
                             console.error(err);
