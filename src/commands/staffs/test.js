@@ -1,5 +1,6 @@
 // const { JWT } = require("google-auth-library");
 // const { google } = require("googleapis");
+const db = require("quick.db");
 
 module.exports = {
     name: "test",
@@ -8,9 +9,5 @@ module.exports = {
     description: "",
     usage: ["`-<command | alias> `"],
     async run(bot, message, args) {
-        // test commands
-        if (!args.length) {
-            console.log("");
-        }
-    },
+
 };

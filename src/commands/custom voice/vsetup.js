@@ -1,5 +1,4 @@
 const { MessageEmbed } = require("discord.js");
-const db = require("quick.db");
 
 module.exports = {
     name: "vsetup",
@@ -21,6 +20,8 @@ module.exports = {
 
         const guildID = message.guild.id;
         const filter = (msg) => msg.author.id === message.author.id;
+
+        // Setup category here
         message.channel.send(
             "**Enter the name of the category to create channels in: (2 mins to answer)**"
         );
@@ -32,7 +33,77 @@ module.exports = {
                 errors: "time",
             })
             .catch(() => message.channel.send("**❌ You ran out of time!**"));
+        const categoryName = category.first().content;
 
-        console.log(category.first().content);
+        // Setup Main Voice Channel
+        message.channel.send(
+            "**Enter the name for the Main VC: (2 mins to answer)**"
+        );
+
+        const channel = await message.channel
+            .awaitMessages(filter, {
+                max: 1,
+                timeout: ms("2m"),
+                errors: "time",
+            })
+            .catch(() => message.channel.send("**❌ You ran out of time!**"));
+        const channelName = channel.first().content;
+
+        // Actually create the channels
+        const newCategory = message.guild.channels.create(categoryName, {
+            type: "voice",
+            permissionOverwrites: [
+                {
+                    id: "690499818489118722", // everyone role
+                    deny: ["VIEW_CHANNEL"],
+                },
+                {
+                    id: "805793101858865252", // verified role
+                    allow: ["VIEW_CHANNEL"],
+                },
+                {
+                    id: "805793101004013599", // q-tizens role
+                    deny: ["VIEW_CHANNEL"],
+                },
+                {
+                    id: "805793100886704148", // muted role
+                    deny: [
+                        "SEND_MESSAGES",
+                        "MENTION_EVERYONE",
+                        "CONNECT",
+                        "SPEAK",
+                    ],
+                },
+            ],
+        });
+
+        const mainVC = message.guild.channels.create(channelName, {
+            type: "voice",
+            permissionOverwrites: [
+                {
+                    id: "690499818489118722", // everyone role
+                    deny: ["VIEW_CHANNEL"],
+                },
+                {
+                    id: "805793101858865252", // verified role
+                    allow: ["VIEW_CHANNEL"],
+                },
+                {
+                    id: "805793101004013599", // q-tizens role
+                    deny: ["VIEW_CHANNEL"],
+                },
+                {
+                    id: "805793100886704148", // muted role
+                    deny: [
+                        "SEND_MESSAGES",
+                        "MENTION_EVERYONE",
+                        "CONNECT",
+                        "SPEAK",
+                    ],
+                },
+            ],
+        });
+
+        // DB here
     },
 };
