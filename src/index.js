@@ -7,6 +7,7 @@ const Ascii = require("ascii-table");
 const { Client, Collection } = require("discord.js");
 const { config } = require("dotenv");
 const { readdirSync } = require("fs");
+const DBUtils = require("./utils/DBUtils");
 global.ms = require("ms");
 global.colors = require("./utils/colors.json");
 
@@ -22,11 +23,15 @@ bot.commands = new Collection();
 bot.queue = [];
 bot.error = null;
 bot.spreadsheetID = null;
+bot.dbClient = new DBUtils(bot, "../vc_configuration.db");
 
 // Setup configuration
 config({
     path: `${__dirname}/../.env`,
 });
+
+// Setup db
+bot.dbClient.preflight();
 
 // Setup listeners
 const lstTable = new Ascii("listeners");
