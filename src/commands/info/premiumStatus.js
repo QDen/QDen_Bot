@@ -3,7 +3,7 @@ const colors = require("../../utils/colors.json");
 
 module.exports = {
     name: "substats",
-    aliases: [""],
+    aliases: [],
     category: "info",
     description: "Displays the subscription status of the server",
     usage: `\`q!<command | alias>\``,

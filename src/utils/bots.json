@@ -58,5 +58,21 @@
 	"472911936951156740": {
 		"name": "VoiceMaster",
 		"status": "offline"
+	},
+	"155149108183695360": {
+		"name": "Dyno",
+		"status": "online"
+	},
+	"402528814548254720": {
+		"name": "PatchBot",
+		"status": "online"
+	},
+	"458276816071950337": {
+		"name": "ServerStats",
+		"status": "offline"
+	},
+	"234395307759108106": {
+		"name": "Groovy",
+		"status": "offline"
 	}
 }

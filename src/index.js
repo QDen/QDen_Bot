@@ -23,7 +23,7 @@ bot.commands = new Collection();
 bot.queue = [];
 bot.error = null;
 bot.spreadsheetID = null;
-bot.dbClient = new DBUtils(bot, "../vc_configuration.db");
+bot.dbClient = new DBUtils(bot, "./vc_configuration.db");
 
 // Setup configuration
 config({

@@ -4,7 +4,7 @@ const { getMember } = require("../../utils/functions.js");
 
 module.exports = {
     name: "wasted",
-    aliases: [""],
+    aliases: [],
     category: "entertainment",
     description: "Puts a wasted overlay",
     usage: [`\`q!<command | alias>\``],

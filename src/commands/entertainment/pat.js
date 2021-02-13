@@ -5,7 +5,7 @@ const { getMember } = require("../../utils/functions.js");
 
 module.exports = {
     name: "pat",
-    aliases: [""],
+    aliases: [],
     category: "entertainment",
     description: "Pats someone gently",
     usage: [`\`q!<command | alias>\``],

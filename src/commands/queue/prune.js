@@ -2,7 +2,7 @@ const savedlist = require("../../models/savedlist.js");
 
 module.exports = {
     name: "prune",
-    aliases: [""],
+    aliases: [],
     category: "queue",
     description: "Cleans the database list dated until last month",
     usage: [`\`-<command | alias> \``],

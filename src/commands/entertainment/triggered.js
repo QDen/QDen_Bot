@@ -4,7 +4,7 @@ const { getMember } = require("../../utils/functions.js");
 
 module.exports = {
     name: "triggered",
-    aliases: [""],
+    aliases: [],
     category: "entertainment",
     description: "Puts a triggered overlay",
     usage: [`\`q!<command | alias>\``],

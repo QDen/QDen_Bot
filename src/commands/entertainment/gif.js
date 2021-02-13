@@ -5,7 +5,7 @@ const { getMember } = require("../../utils/functions.js");
 
 module.exports = {
     name: "gif",
-    aliases: [""],
+    aliases: [],
     category: "entertainment",
     description: "Provides a random gif based on the search query",
     usage: [`\`q!<command | alias>\``],

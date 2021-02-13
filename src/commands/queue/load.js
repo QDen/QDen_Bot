@@ -2,7 +2,7 @@ const savedlist = require("../../models/savedlist.js");
 
 module.exports = {
     name: "load",
-    aliases: [""],
+    aliases: [],
     category: "queue",
     description: "Loads the saved list.",
     usage: [`\`-<command | alias> \``],
