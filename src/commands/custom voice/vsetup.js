@@ -1,8 +1,8 @@
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
-    name: "vsetup",
-    aliases: ["vs"],
+    name: "vcsetup",
+    aliases: ["vcs"],
     category: "custom voice",
     description: "",
     usage: ["`-<command | alias> `"],
@@ -50,8 +50,8 @@ module.exports = {
         const channelName = channel.first().content;
 
         // Actually create the channels
-        const newCategory = message.guild.channels.create(categoryName, {
-            type: "voice",
+        const newCategory = await message.guild.channels.create(categoryName, {
+            type: "category",
             permissionOverwrites: [
                 {
                     id: "690499818489118722", // everyone role
@@ -77,8 +77,9 @@ module.exports = {
             ],
         });
 
-        const mainVC = message.guild.channels.create(channelName, {
+        const mainVC = await message.guild.channels.create(channelName, {
             type: "voice",
+            parent: newCategory.id,
             permissionOverwrites: [
                 {
                     id: "690499818489118722", // everyone role
@@ -104,6 +105,16 @@ module.exports = {
             ],
         });
 
-        // DB here
+        // Create JSON object for channels
+        const channels = {
+            categoryID: newCategory.id,
+            channels: [mainVC.id],
+        };
+
+        // Store into DB
+        bot.dbClient.setActiveChannels(guildID, channels);
+
+        // Send confirmation message
+        message.channel.send("✅ **Successfully Created Category and VCs!**");
     },
 };

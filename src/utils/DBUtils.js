@@ -33,8 +33,8 @@ class DBUtils {
             .run();
 
         // @MahoMuri: Remove these two pragma lines when implementing IPC-based sharding
-        this.sqlClient.pragma("journal_mode = WAL");
-        this.sqlClient.pragma("locking_mode = EXCLUSIVE");
+        // this.sqlClient.pragma("journal_mode = WAL");
+        // this.sqlClient.pragma("locking_mode = EXCLUSIVE");
     }
 
     getActiveChannels(guildID) {
@@ -47,14 +47,14 @@ class DBUtils {
             )
             .get(guildID);
 
-        return JSON.parse(channels ? channels.configuration : "undefined");
+        return channels ? JSON.parse(channels.activeChannels) : undefined;
     }
 
     setActiveChannels(guildID, channels) {
         if (typeof guildID !== "string")
             throw new TypeError("Provided userID is not a string");
 
-        if (!this.getUserSettings(guildID)) {
+        if (!this.getActiveChannels(guildID)) {
             this.sqlClient
                 .prepare("INSERT INTO guildChannels VALUES (?, ?)")
                 .run(guildID, "{}");
@@ -62,9 +62,9 @@ class DBUtils {
 
         this.sqlClient
             .prepare(
-                "UPDATE guildChannels SET configuration = ? WHERE guildID = ?"
+                "UPDATE guildChannels SET activeChannels = ? WHERE guildID = ?"
             )
-            .run(guildID, JSON.stringify(channels));
+            .run(JSON.stringify(channels), guildID);
     }
 
     getGuildSettings(guildID) {
@@ -77,16 +77,16 @@ class DBUtils {
             )
             .get(guildID);
 
-        return JSON.parse(
-            guildSettings ? guildSettings.configuration : "undefined"
-        );
+        return guildSettings
+            ? JSON.parse(guildSettings.configuration)
+            : undefined;
     }
 
     setGuildSettings(guildID, settings) {
         if (typeof userID !== "string")
             throw new TypeError("Provided userID is not a string");
 
-        if (!this.getUserSettings(guildID)) {
+        if (!this.getGuildSettings(guildID)) {
             this.sqlClient
                 .prepare("INSERT INTO guildSettings VALUES (?, ?)")
                 .run(guildID, "{}");
@@ -96,7 +96,7 @@ class DBUtils {
             .prepare(
                 "UPDATE guildSettings SET configuration = ? WHERE guildID = ?"
             )
-            .run(guildID, JSON.stringify(settings));
+            .run(JSON.stringify(settings), guildID);
     }
 
     getUserSettings(userID) {
@@ -107,9 +107,9 @@ class DBUtils {
             .prepare("SELECT configuration FROM userSettings WHERE userID = ?")
             .get(userID);
 
-        return JSON.parse(
-            userSettings ? userSettings.configuration : "undefined"
-        );
+        return userSettings
+            ? JSON.parse(userSettings.configuration)
+            : undefined;
     }
 
     setUserSettings(userID, settings) {
@@ -126,7 +126,7 @@ class DBUtils {
             .prepare(
                 "UPDATE userSettings SET configuration = ? WHERE userID = ?"
             )
-            .run(userID, JSON.stringify(settings));
+            .run(JSON.stringify(settings), userID);
     }
 }
 
