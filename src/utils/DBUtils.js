@@ -83,8 +83,8 @@ class DBUtils {
     }
 
     setGuildSettings(guildID, settings) {
-        if (typeof userID !== "string")
-            throw new TypeError("Provided userID is not a string");
+        if (typeof guildID !== "string")
+            throw new TypeError("Provided guildID is not a string");
 
         if (!this.getGuildSettings(guildID)) {
             this.sqlClient

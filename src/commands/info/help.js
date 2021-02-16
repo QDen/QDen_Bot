@@ -28,7 +28,8 @@ module.exports = {
                 .map(
                     (cat) =>
                         stripIndents`**${
-                            cat[0].toUpperCase() + cat.slice(1)
+                            cat[0].toUpperCase() +
+                            cat.slice(1).replace("_", " ")
                         } Commands:** \n${commands(cat)}`
                 )
                 .reduce((string, category) => `${string}\n\n${category}`);

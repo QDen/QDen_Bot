@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
     name: "vcsetup",
     aliases: ["vcs"],
-    category: "custom voice",
+    category: "custom_voice",
     description: "",
     usage: ["`-<command | alias> `"],
     async run(bot, message, args) {
@@ -105,14 +105,15 @@ module.exports = {
             ],
         });
 
-        // Create JSON object for channels
-        const channels = {
+        // Create JSON object for config
+        const config = {
             categoryID: newCategory.id,
             channels: [mainVC.id],
+            premium: false,
         };
 
         // Store into DB
-        bot.dbClient.setActiveChannels(guildID, channels);
+        bot.dbClient.setGuildSettings(guildID, config);
 
         // Send confirmation message
         message.channel.send("✅ **Successfully Created Category and VCs!**");

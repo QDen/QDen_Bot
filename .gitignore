@@ -5,3 +5,6 @@ Start_bot.bat
 template.config.js
 mongodbURI.json
 QDen-google.json
+vc_configuration.db
+vc_configuration.db-shm
+vc_configuration.db-wal
