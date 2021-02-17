@@ -3,6 +3,9 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = (bot) => {
     bot.on("voiceStateUpdate", async (oldState, newState) => {
+        if (oldState.channel === newState.channel) {
+            return;
+        }
         if (newState.channelID) {
             // Declaring IDs
             const channelID = newState.channelID;
@@ -12,6 +15,11 @@ module.exports = (bot) => {
             // Fetch guild settings and active channels from local db
             const guildSettings = bot.dbClient.getGuildSettings(
                 newState.guild.id
+            );
+
+            // Everyone role
+            const everyone = newState.guild.roles.cache.find(
+                (role) => role.name === "@everyone"
             );
             const activeChannels = bot.dbClient.getActiveChannels(guildID);
 
@@ -44,7 +52,7 @@ module.exports = (bot) => {
                                 parent: guildSettings.categoryID,
                                 permissionOverwrites: [
                                     {
-                                        id: "690499818489118722", // everyone role
+                                        id: everyone.id, // everyone role
                                         deny: ["VIEW_CHANNEL"],
                                     },
                                 ],
@@ -79,8 +87,6 @@ module.exports = (bot) => {
 
                         userSettings = {
                             channelName: defaultName,
-                            voicechannelID: userVoiceChannel.id,
-                            textChannelID: userTextChannel.id,
                             userLimit: 0,
                             bitrate: 64000,
                         };
@@ -103,6 +109,8 @@ module.exports = (bot) => {
                             {
                                 type: "voice",
                                 parent: guildSettings.categoryID,
+                                bitrate: userSettings.bitrate,
+                                userLimit: userSettings.userLimit,
                             }
                         );
 
@@ -112,8 +120,15 @@ module.exports = (bot) => {
                             {
                                 type: "text",
                                 parent: guildSettings.categoryID,
+                                permissionOverwrites: [
+                                    {
+                                        id: everyone.id, // everyone role
+                                        deny: ["VIEW_CHANNEL"],
+                                    },
+                                ],
                             }
                         );
+
                         // Voice channel perms
                         userVoiceChannel.createOverwrite(newState.member.user, {
                             VIEW_CHANNEL: true,
@@ -151,18 +166,21 @@ module.exports = (bot) => {
                         newState.setChannel(userVoiceChannel);
                     }
                 } else if (activeChannels) {
-                    if (newState.channel.members.size > 1) {
-                        const textChannel = oldState.guild.channels.resolve(
-                            activeChannels.find(
-                                (channel) => channel.voice === channelID
-                            ).text
-                        );
+                    if (
+                        activeChannels.find(
+                            (channel) => channel.voice === channelID
+                        )
+                    ) {
+                        if (newState.channel.members.size > 1) {
+                            const textChannel = oldState.guild.channels.resolve(
+                                activeChannels.find(
+                                    (channel) => channel.voice === channelID
+                                ).text
+                            );
 
-                        if (
-                            activeChannels.find(
-                                (channel) => channel.voice === channelID
-                            )
-                        ) {
+                            textChannel.updateOverwrite(newState.member.user, {
+                                VIEW_CHANNEL: true,
+                            });
                             const embed = new MessageEmbed()
                                 .setColor(colors.Turquoise)
                                 .setDescription(
@@ -203,6 +221,11 @@ module.exports = (bot) => {
                         )
                     );
                 } else {
+                    const userPerms = textChannel.permissionOverwrites.find(
+                        (permission) =>
+                            permission.id === oldState.member.user.id
+                    );
+                    userPerms.delete();
                     const embed = new MessageEmbed()
                         .setColor(colors.Turquoise)
                         .setDescription(
