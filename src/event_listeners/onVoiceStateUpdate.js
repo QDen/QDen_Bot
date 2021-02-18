@@ -1,5 +1,6 @@
 const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
+const Utilities = require("../utils/functions");
 
 module.exports = (bot) => {
     bot.on("voiceStateUpdate", async (oldState, newState) => {
@@ -86,12 +87,15 @@ module.exports = (bot) => {
                         });
 
                         userSettings = {
-                            channelName: defaultName,
+                            owner: newState.member.user.id,
+                            VCName: userVoiceChannel.name,
+                            TCName: userTextChannel.name,
                             userLimit: 0,
                             bitrate: 64000,
                         };
 
                         activeChannels.push({
+                            owner: newState.member.user.id,
                             voice: userVoiceChannel.id,
                             text: userTextChannel.id,
                         });
@@ -102,10 +106,13 @@ module.exports = (bot) => {
 
                         // Move member to new channel
                         newState.setChannel(userVoiceChannel);
+                        userTextChannel.send(
+                            Utilities.channelInfo(newState.guild, userSettings)
+                        );
                     } else {
                         // Voice channel creation
                         const userVoiceChannel = await newState.guild.channels.create(
-                            userSettings.channelName,
+                            userSettings.VCName,
                             {
                                 type: "voice",
                                 parent: guildSettings.categoryID,
@@ -116,7 +123,7 @@ module.exports = (bot) => {
 
                         // Text channel creation
                         const userTextChannel = await newState.guild.channels.create(
-                            userSettings.channelName,
+                            userSettings.TCName,
                             {
                                 type: "text",
                                 parent: guildSettings.categoryID,
@@ -157,6 +164,7 @@ module.exports = (bot) => {
 
                         // Add the newly creted channel to the array of active channels
                         activeChannels.push({
+                            owner: newState.member.user.id,
                             voice: userVoiceChannel.id,
                             text: userTextChannel.id,
                         });
@@ -164,6 +172,9 @@ module.exports = (bot) => {
 
                         // Move member to new channel
                         newState.setChannel(userVoiceChannel);
+                        userTextChannel.send(
+                            Utilities.channelInfo(newState.guild, userSettings)
+                        );
                     }
                 } else if (activeChannels) {
                     if (
@@ -181,6 +192,7 @@ module.exports = (bot) => {
                             textChannel.updateOverwrite(newState.member.user, {
                                 VIEW_CHANNEL: true,
                             });
+
                             const embed = new MessageEmbed()
                                 .setColor(colors.Turquoise)
                                 .setDescription(

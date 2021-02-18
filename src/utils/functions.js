@@ -16,6 +16,10 @@ class Utilities {
         return check;
     }
 
+    static formatBitrate(bitrate) {
+        return bitrate.toString().replace(/000/g, "kbps");
+    }
+
     static getMember(message, toFind = "") {
         toFind.toLowerCase();
 
@@ -248,6 +252,22 @@ class Utilities {
                     inline: true,
                 }
             );
+    }
+
+    static channelInfo(guild, userSettings) {
+        const embed = new MessageEmbed()
+            .setTitle("Channel Info")
+            .setColor(colors.Turquoise)
+            .setDescription(stripIndents`**Channel Owner:** ${guild.member(
+            userSettings.owner
+        )}
+            **User Limit:** ${
+                userSettings.userLimit === 0 ? "none" : userSettings.userLimit
+            }
+            **Bitrate:** ${Utilities.formatBitrate(userSettings.bitrate)}
+
+            \`q.name\` to change the name of the channel`);
+        return embed;
     }
 
     static getStaffInfo(bot, message, time, value, originalValue, staffMember) {

@@ -4,9 +4,9 @@ module.exports = {
     name: "vcsetup",
     aliases: ["vcs"],
     category: "custom_voice",
-    description: "",
-    usage: ["`-<command | alias> `"],
-    async run(bot, message, args) {
+    description: "Sets up Custom VC by creating a new Category and VC",
+    usage: ["`q.vcsetup or q.vcs`"],
+    async run(bot, message) {
         if (!message.member.hasPermission("MANAGE_GUILD")) {
             const embed = new MessageEmbed()
                 .setDescription("**❌ You don't have access to this command!**")

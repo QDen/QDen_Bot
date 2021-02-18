@@ -11,7 +11,7 @@ module.exports = {
         function getAll(bot, message) {
             const embed = new MessageEmbed()
                 .setTitle("**Command List:**")
-                .setColor("RANDOM");
+                .setColor(colors.Turquoise);
 
             // Map all the commands
             // with the specific category
