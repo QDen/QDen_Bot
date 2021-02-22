@@ -19,6 +19,16 @@ module.exports = {
         }
 
         const guildID = message.guild.id;
+        const guildSettings = bot.dbClient.getGuildSettings(guildID);
+
+        if (guildSettings) {
+            const embed = new MessageEmbed()
+                .setColor(colors.Red)
+                .setDescription("❌ **Custom VC already setup!**");
+            message.channel.send(embed);
+            return;
+        }
+
         const filter = (msg) => msg.author.id === message.author.id;
 
         // Setup category here

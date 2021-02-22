@@ -1,11 +1,11 @@
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
-    name: "lock",
-    aliases: ["lck"],
+    name: "show",
+    aliases: ["sh"],
     category: "custom_voice",
-    description: "Locks the VC",
-    usage: ["`-<command | alias> `"],
+    description: "Shows the Voice channel",
+    usage: ["`q.show`"],
     async run(bot, message) {
         // Fetch channel data from DB
         const activeChannels = bot.dbClient.getActiveChannels(message.guild.id);
@@ -33,26 +33,21 @@ module.exports = {
             return;
         }
 
-        // Fetch the two channels
+        // Fetch the voice channel
         const voiceChannel = message.guild.channels.resolve(
             currentChannel.voice
         );
 
-        // Everyone role
-        const everyone = message.guild.roles.cache.find(
-            (role) => role.name === "@everyone"
+        const originalPermissions = bot.dbClient.getChannelPermissions(
+            voiceChannel.id
         );
 
         try {
-            voiceChannel.updateOverwrite(everyone, {
-                CONNECT: false,
-            });
+            voiceChannel.overwritePermissions(originalPermissions);
 
             const embed = new MessageEmbed()
                 .setColor(colors.Green)
-                .setDescription(
-                    "🔒 **Successfully locked the Voice Channel!**"
-                );
+                .setDescription("✅ **Voice Channel is now public!**");
             message.channel.send(embed);
         } catch (error) {
             console.log(error.stack);

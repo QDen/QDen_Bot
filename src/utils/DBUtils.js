@@ -31,6 +31,12 @@ class DBUtils {
                 "CREATE TABLE IF NOT EXISTS guildSettings(guildID TEXT NOT NULL UNIQUE, configuration TEXT);"
             )
             .run();
+        this.sqlClient
+            .prepare(
+                // Stringified JSON object stored as a TEXT object
+                "CREATE TABLE IF NOT EXISTS channelPermissions(channelID TEXT NOT NULL UNIQUE, permissions TEXT);"
+            )
+            .run();
 
         // @MahoMuri: Remove these two pragma lines when implementing IPC-based sharding
         // this.sqlClient.pragma("journal_mode = WAL");
@@ -57,7 +63,7 @@ class DBUtils {
         if (!this.getActiveChannels(guildID)) {
             this.sqlClient
                 .prepare("INSERT INTO guildChannels VALUES (?, ?)")
-                .run(guildID, "{}");
+                .run(guildID, "[{}]");
         }
 
         this.sqlClient
@@ -127,6 +133,36 @@ class DBUtils {
                 "UPDATE userSettings SET configuration = ? WHERE userID = ?"
             )
             .run(JSON.stringify(settings), userID);
+    }
+
+    getChannelPermissions(channelID) {
+        if (typeof channelID !== "string") {
+            throw new Error("Provided channel ID must be a string");
+        }
+        const permissions = this.sqlClient
+            .prepare(
+                "SELECT permissions FROM channelPermissions WHERE channelID = ?"
+            )
+            .get(channelID);
+        return permissions ? JSON.parse(permissions.permissions) : undefined;
+    }
+
+    setChannelPermissions(channelID, permissions) {
+        if (typeof channelID !== "string") {
+            throw new Error("Provided channel ID must be a string");
+        }
+
+        if (!this.getChannelPermissions(channelID)) {
+            this.sqlClient
+                .prepare("INSERT INTO channelPermissions VALUES(?,?)")
+                .run(channelID, "[{}]");
+        }
+
+        this.sqlClient
+            .prepare(
+                "UPDATE channelPermissions SET permissions = ? WHERE channelID = ?"
+            )
+            .run(JSON.stringify(permissions), channelID);
     }
 }
 

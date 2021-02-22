@@ -25,6 +25,12 @@ module.exports = {
                 message.channel.send(embed);
                 return;
             }
+        } else {
+            const embed = new MessageEmbed()
+                .setColor(colors.Red)
+                .setDescription("❌ **You're not in a Voice Channel!**");
+            message.channel.send(embed);
+            return;
         }
 
         // Fetch the two channels
@@ -45,7 +51,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setColor(colors.Green)
                 .setDescription(
-                    "✅ **Successfully unlocked the Voice Channel!**"
+                    "🔓 **Successfully unlocked the Voice Channel!**"
                 );
             message.channel.send(embed);
         } catch (error) {

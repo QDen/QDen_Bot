@@ -61,7 +61,7 @@
 	},
 	"155149108183695360": {
 		"name": "Dyno",
-		"status": "offline"
+		"status": "online"
 	},
 	"402528814548254720": {
 		"name": "PatchBot",
@@ -73,10 +73,14 @@
 	},
 	"234395307759108106": {
 		"name": "Groovy",
-		"status": "offline"
+		"status": "online"
 	},
 	"201503408652419073": {
 		"name": "Octave",
+		"status": "offline"
+	},
+	"235148962103951360": {
+		"name": "Carl-bot",
 		"status": "offline"
 	}
 }

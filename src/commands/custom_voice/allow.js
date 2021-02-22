@@ -1,12 +1,14 @@
+const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
+const { getMember } = require("../../utils/functions");
 
 module.exports = {
-    name: "lock",
-    aliases: ["lck"],
+    name: "allow",
+    aliases: ["permit"],
     category: "custom_voice",
-    description: "Locks the VC",
-    usage: ["`-<command | alias> `"],
-    async run(bot, message) {
+    description: "Allows a user into your VC ",
+    usage: ["`q.allow @user`"],
+    async run(bot, message, args) {
         // Fetch channel data from DB
         const activeChannels = bot.dbClient.getActiveChannels(message.guild.id);
         const currentChannel = activeChannels.find(
@@ -39,19 +41,17 @@ module.exports = {
         );
 
         // Everyone role
-        const everyone = message.guild.roles.cache.find(
-            (role) => role.name === "@everyone"
-        );
+        const allowedMember = getMember(message, args.join(" "));
 
         try {
-            voiceChannel.updateOverwrite(everyone, {
-                CONNECT: false,
+            voiceChannel.updateOverwrite(allowedMember.user, {
+                CONNECT: true,
             });
 
             const embed = new MessageEmbed()
                 .setColor(colors.Green)
                 .setDescription(
-                    "🔒 **Successfully locked the Voice Channel!**"
+                    stripIndents`✅ **Allowed ${allowedMember} to the Voice Channel!**`
                 );
             message.channel.send(embed);
         } catch (error) {

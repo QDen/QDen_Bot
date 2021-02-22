@@ -1,14 +1,17 @@
+const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
+const Utilities = require("../../utils/functions");
 
 module.exports = {
-    name: "lock",
-    aliases: ["lck"],
+    name: "bitrate",
+    aliases: ["bt"],
     category: "custom_voice",
-    description: "Locks the VC",
-    usage: ["`-<command | alias> `"],
-    async run(bot, message) {
+    description: "Sets the bitate of the voice channel",
+    usage: ["`q.bitrate`"],
+    async run(bot, message, args) {
         // Fetch channel data from DB
         const activeChannels = bot.dbClient.getActiveChannels(message.guild.id);
+        const userSetings = bot.dbClient.getUserSettings(message.author.id);
         const currentChannel = activeChannels.find(
             (channel) =>
                 channel.text === message.channel.id ||
@@ -33,29 +36,42 @@ module.exports = {
             return;
         }
 
-        // Fetch the two channels
+        // Fetch the voice channel
         const voiceChannel = message.guild.channels.resolve(
             currentChannel.voice
         );
 
-        // Everyone role
-        const everyone = message.guild.roles.cache.find(
-            (role) => role.name === "@everyone"
-        );
+        if (
+            Number.isNaN(parseInt(args[0])) ||
+            parseInt(args[0]) < 8 ||
+            parseInt(args[0]) > 128
+        ) {
+            const embed = new MessageEmbed()
+                .setColor(colors.Red)
+                .setDescription(
+                    "❌ **Bitrate must be between 8kpbs to 128kbps!**"
+                );
+            message.channel.send(embed);
+            return;
+        }
+
+        const bitrate = parseInt(args[0]) * 1000;
 
         try {
-            voiceChannel.updateOverwrite(everyone, {
-                CONNECT: false,
-            });
+            voiceChannel.setBitrate(bitrate);
+
+            userSetings.bitrate = bitrate;
+            bot.dbClient.setUserSettings(message.author.id, userSetings);
 
             const embed = new MessageEmbed()
                 .setColor(colors.Green)
                 .setDescription(
-                    "🔒 **Successfully locked the Voice Channel!**"
+                    stripIndents`✅ **Voice Channel's bitrate is now \`${Utilities.formatBitrate(
+                        bitrate
+                    )}\`**`
                 );
             message.channel.send(embed);
         } catch (error) {
-            console.log(error.stack);
             const embed = new MessageEmbed()
                 .setColor(colors.Red)
                 .setDescription(

@@ -5,7 +5,9 @@ module.exports = {
     aliases: ["cn"],
     category: "custom_voice",
     description: "Changes the name of your voice channel",
-    usage: ["`-<command | alias> `"],
+    usage: [
+        "`q.name OR q.name text newTextChannelNameHere OR q.name voice newVoiceChannelNameHere`",
+    ],
     async run(bot, message, args) {
         // Fetch channel data from the db
         const userSetings = bot.dbClient.getUserSettings(message.author.id);
@@ -26,6 +28,12 @@ module.exports = {
                 message.channel.send(embed);
                 return;
             }
+        } else {
+            const embed = new MessageEmbed()
+                .setColor(colors.Red)
+                .setDescription("❌ **You're not in a Voice Channel!**");
+            message.channel.send(embed);
+            return;
         }
 
         // Fetch the two channels
