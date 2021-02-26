@@ -24,7 +24,12 @@ module.exports = async (bot) => {
             })
             .catch((err) => console.log("Error on staffsheet\n", err));
 
-        const logChannel = await bot.channels.cache.get("694217906296455188");
+        // Initialize COVID19API
+        await bot.covidAPI
+            .init()
+            .then(() => console.log("✅ COIVD19API has been Initialized."));
+
+        // const logChannel = await bot.channels.cache.get("694217906296455188");
         const logMsg = `✅ **${bot.user.username} Bot is online!**`;
 
         // logChannel.send(logMsg);

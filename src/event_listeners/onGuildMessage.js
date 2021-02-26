@@ -23,7 +23,7 @@ module.exports = async (bot) => {
 
             fs.writeFileSync(
                 `${__dirname}/../utils/prefixes.json`,
-                JSON.stringify(prefixes)
+                JSON.stringify(prefixes, null, "\t")
             );
         }
 
@@ -39,13 +39,6 @@ module.exports = async (bot) => {
             .join("");
 
         if (message.author.bot || !message.guild || prefix.length <= 0) {
-            return;
-        }
-        if (
-            message.author.bot ||
-            !message.guild ||
-            !message.content.startsWith(prefix)
-        ) {
             return;
         }
 
@@ -71,7 +64,7 @@ module.exports = async (bot) => {
 
         // If a command is finally found, run the command
         if (command) {
-            command.run(bot, message, args, prefix, command.name);
+            command.run(bot, message, args, prefix);
         }
     });
 };

@@ -1,7 +1,4 @@
-const { MessageEmbed } = require("discord.js");
 const fs = require("fs");
-
-const colors = require("../utils/colors.json");
 
 const bots = JSON.parse(
     fs.readFileSync(`${__dirname}/../utils/bots.json`, "utf-8")
@@ -42,18 +39,18 @@ module.exports = (bot) => {
                 );
             }
 
-            if (newPresence.user.username === "Carl-bot") {
-                const staffchat = await newPresence.guild.channels.cache.find(
-                    (c) => c.id === "805793217090027561"
-                );
-                const embed = new MessageEmbed()
-                    .setTitle(`${newPresence.user.username} is now online!`)
-                    .setDescription(
-                        "I have now disabled temporary verifications!"
-                    )
-                    .setColor(colors.Green);
-                staffchat.send(embed);
-            }
+            // if (newPresence.user.username === "Carl-bot") {
+            //     const staffchat = await newPresence.guild.channels.cache.find(
+            //         (c) => c.id === "805793217090027561"
+            //     );
+            //     const embed = new MessageEmbed()
+            //         .setTitle(`${newPresence.user.username} is now online!`)
+            //         .setDescription(
+            //             "I have now disabled temporary verifications!"
+            //         )
+            //         .setColor(colors.Green);
+            //     staffchat.send(embed);
+            // }
         } else if (
             newPresence.member.roles.cache.has("805793096490549259") &&
             newPresence.status === "offline"
@@ -80,18 +77,18 @@ module.exports = (bot) => {
                 );
             }
 
-            if (newPresence.user.username === "Carl-bot") {
-                const staffchat = await newPresence.guild.channels.cache.find(
-                    (c) => c.id === "805793217090027561"
-                );
-                const embed = new MessageEmbed()
-                    .setTitle(`${newPresence.user.username} has gone offline!`)
-                    .setDescription(
-                        "I have now enabled temporary verifications!"
-                    )
-                    .setColor(colors.Red);
-                staffchat.send(embed);
-            }
+            // if (newPresence.user.username === "Carl-bot") {
+            //     const staffchat = await newPresence.guild.channels.cache.find(
+            //         (c) => c.id === "805793217090027561"
+            //     );
+            //     const embed = new MessageEmbed()
+            //         .setTitle(`${newPresence.user.username} has gone offline!`)
+            //         .setDescription(
+            //             "I have now enabled temporary verifications!"
+            //         )
+            //         .setColor(colors.Red);
+            //     staffchat.send(embed);
+            // }
         }
     });
 };

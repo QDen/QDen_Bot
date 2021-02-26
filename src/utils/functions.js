@@ -16,17 +16,21 @@ class Utilities {
         return check;
     }
 
+    static formatBitrate(bitrate) {
+        return bitrate.toString().replace(/000/g, "kbps");
+    }
+
     static getMember(message, toFind = "") {
         toFind.toLowerCase();
 
-        let target = message.guild.roles.cache.get(toFind);
+        let target = message.guild.members.cache.get(toFind);
 
         if (!target && message.mentions.members) {
             target = message.mentions.members.first();
         }
 
         if (!target && toFind) {
-            target = message.guild.roles.cache.find(
+            target = message.guild.members.cache.find(
                 (member) =>
                     member.displayName.toLowerCase().includes(toFind) ||
                     member.user.tag.toLowerCase().includes(toFind)
@@ -250,6 +254,47 @@ class Utilities {
             );
     }
 
+    static channelInfo(guild, userSettings) {
+        let MAX_BITRATE;
+        if (guild.premiumTier === 0) {
+            MAX_BITRATE = 96;
+        } else if (guild.premiumTier === 1) {
+            MAX_BITRATE = 128;
+        } else if (guild.premiumTier === 2) {
+            MAX_BITRATE = 256;
+        } else if (guild.premiumTier === 3) {
+            MAX_BITRATE = 384;
+        }
+
+        const embed = new MessageEmbed()
+            .setTitle("Channel Info")
+            .setColor(colors.Turquoise)
+            .setDescription(stripIndents`**Channel Owner:** ${guild.member(
+            userSettings.owner
+        )}
+            **User Limit:** ${
+                userSettings.userLimit === 0 ? "none" : userSettings.userLimit
+            }
+            **Bitrate:** ${Utilities.formatBitrate(
+                userSettings.bitrate > MAX_BITRATE * 1000
+                    ? MAX_BITRATE * 1000
+                    : userSettings.bitrate
+            )}
+
+            \`q.name <new name>\` to change the name of both of the channels
+            \`q.name voice <new name>\` to change the name of the voice channel
+            \`q.name text <new name>\` to change the name of the text channel
+            \`q.lock\` to lock the voice channel
+            \`q.unlock\` to unlock the voice channel
+            \`q.hide\` to hide the voice channel
+            \`q.show\` to show the voice channel
+            \`q.allow <@user>\` to allow a user into the voice channel
+            \`q.deny <@user>\` to deny a user into the voice channel
+            \`q.bitrate\` to set the bitrate of the voice channel
+            \`q.limit\` to set the user limit of the voice channel`);
+        return embed;
+    }
+
     static getStaffInfo(bot, message, time, value, originalValue, staffMember) {
         time *= 1000;
 
@@ -318,6 +363,30 @@ class Utilities {
 
     static toSentenceCase(sentence) {
         return sentence[0].toUpperCase() + sentence.slice(1);
+    }
+
+    static replacePlaceholders(voiceState, sentence) {
+        const userDetails = {
+            user: voiceState.member.user.username,
+            user_mention: voiceState.member,
+            channelName: voiceState.channel.name,
+        };
+
+        const placeholders = sentence.match(/\%(.*?)\%/g);
+
+        if (placeholders) {
+            placeholders.forEach((placeholder) => {
+                const phText = placeholder.substring(1, placeholder.length - 1);
+                if (userDetails[phText]) {
+                    sentence = sentence.replace(
+                        placeholder,
+                        userDetails[phText]
+                    );
+                }
+            });
+        }
+
+        return sentence;
     }
 }
 

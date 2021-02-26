@@ -10,8 +10,8 @@ module.exports = {
     run: async (bot, message, args) => {
         function getAll(bot, message) {
             const embed = new MessageEmbed()
-                .setTitle("**Command List:**")
-                .setColor("RANDOM");
+                .setTitle("**Commands List:**")
+                .setColor(colors.Turquoise);
 
             // Map all the commands
             // with the specific category
@@ -21,14 +21,13 @@ module.exports = {
                     .map((cmd) => `\`${cmd.name}\``)
                     .join(", ");
 
-            const allCommands = bot.commands.filter((cmd) => cmd);
-
             // Map all the categories
             const info = bot.categories
                 .map(
                     (cat) =>
                         stripIndents`**${
-                            cat[0].toUpperCase() + cat.slice(1)
+                            cat[0].toUpperCase() +
+                            cat.slice(1).replace("_", " ")
                         } Commands:** \n${commands(cat)}`
                 )
                 .reduce((string, category) => `${string}\n\n${category}`);
@@ -37,7 +36,7 @@ module.exports = {
                 embed
                     .setDescription(info)
                     .setFooter(
-                        `To check command usage, type \`-help <command>\` | Commands: ${allCommands.size}`
+                        `To check command usage, type \`q.help <command>\` | Commands: ${bot.commands.size}`
                     )
             );
         }
@@ -75,9 +74,12 @@ module.exports = {
                 info += `\n**Usage**: ${cmd.usage}`;
                 embed.setFooter(`Syntax: <> = required, [] = optional`);
             }
+            if (cmd.placeholders) {
+                info += `\n**Placeholders:** ${cmd.placeholders}`;
+            }
 
             return message.channel.send(
-                embed.setColor("GREEN").setDescription(info)
+                embed.setColor("GREEN").setDescription(stripIndents`${info}`)
             );
         }
         // If there's an args found

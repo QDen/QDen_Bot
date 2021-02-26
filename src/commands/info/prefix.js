@@ -8,7 +8,7 @@ const prefixes = JSON.parse(
 
 module.exports = {
     name: "prefix",
-    aliases: [""],
+    aliases: [],
     category: "info",
     description:
         "Displays the prefix of this server or changes the prefix of this server",
@@ -35,8 +35,8 @@ module.exports = {
                 };
 
                 fs.writeFileSync(
-                    "./prefixes.json",
-                    JSON.stringify(prefixes),
+                    "./src/utils/prefixes.json",
+                    JSON.stringify(prefixes, null, "\t"),
                     (err) => {
                         if (err) {
                             console.error(err);
