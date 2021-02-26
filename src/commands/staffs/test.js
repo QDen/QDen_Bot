@@ -1,5 +1,7 @@
 // const { JWT } = require("google-auth-library");
 // const { google } = require("googleapis");
+const { MessageAttachment, MessageEmbed } = require("discord.js");
+const stringSimilarity = require("string-similarity");
 
 module.exports = {
     name: "test",
@@ -8,12 +10,28 @@ module.exports = {
     description: "",
     usage: ["`-<command | alias> `"],
     async run(bot, message, args) {
-        const activeChannels = bot.dbClient.getActiveChannels(message.guild.id);
-        activeChannels.length = 0;
-        bot.dbClient.setActiveChannels(message.guild.id, activeChannels);
+        // const location = stringSimilarity.findBestMatch(
+        //     args.join(" "),
+        //     bot.covidAPI.locations
+        // );
 
-        console.log();
-        // console.log(bot.dbClient.getGuildSettings(message.guild.id));
-        console.log(bot.dbClient.getUserSettings(message.author.id));
+        // // const data = await bot.covidAPI.getDataByLocationAndDate(
+        // //     location.bestMatch.target,
+        // //     bot.covidAPI.lastDate
+        // // );
+
+        // const attachment = new MessageAttachment(
+        //     Buffer.from(bot.covidAPI.locations.join("\n")),
+        //     "Available locations.txt"
+        // );
+
+        // message.channel.send(attachment);
+
+        // const embed = new MessageEmbed()
+        //     .setColor(colors.Turquoise)
+        //     .setDescription(args.join(" "));
+        // message.channel.send(embed);
+
+        console.log(args.shift());
     },
 };

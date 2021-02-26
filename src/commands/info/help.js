@@ -10,7 +10,7 @@ module.exports = {
     run: async (bot, message, args) => {
         function getAll(bot, message) {
             const embed = new MessageEmbed()
-                .setTitle("**Command List:**")
+                .setTitle("**Commands List:**")
                 .setColor(colors.Turquoise);
 
             // Map all the commands
@@ -20,8 +20,6 @@ module.exports = {
                     .filter((cmd) => cmd.category === category)
                     .map((cmd) => `\`${cmd.name}\``)
                     .join(", ");
-
-            const allCommands = bot.commands.filter((cmd) => cmd);
 
             // Map all the categories
             const info = bot.categories
@@ -38,7 +36,7 @@ module.exports = {
                 embed
                     .setDescription(info)
                     .setFooter(
-                        `To check command usage, type \`-help <command>\` | Commands: ${allCommands.size}`
+                        `To check command usage, type \`q.help <command>\` | Commands: ${bot.commands.size}`
                     )
             );
         }
@@ -76,9 +74,12 @@ module.exports = {
                 info += `\n**Usage**: ${cmd.usage}`;
                 embed.setFooter(`Syntax: <> = required, [] = optional`);
             }
+            if (cmd.placeholders) {
+                info += `\n**Placeholders:** ${cmd.placeholders}`;
+            }
 
             return message.channel.send(
-                embed.setColor("GREEN").setDescription(info)
+                embed.setColor("GREEN").setDescription(stripIndents`${info}`)
             );
         }
         // If there's an args found

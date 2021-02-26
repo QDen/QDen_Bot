@@ -6,7 +6,7 @@ module.exports = {
     category: "custom_voice",
     description: "Changes the name of your voice channel",
     usage: [
-        "`q.name OR q.name text newTextChannelNameHere OR q.name voice newVoiceChannelNameHere`",
+        "`q.name <newName> OR q.name text <newName> OR q.name voice <newName>`",
     ],
     async run(bot, message, args) {
         // Fetch channel data from the db
@@ -31,7 +31,7 @@ module.exports = {
         } else {
             const embed = new MessageEmbed()
                 .setColor(colors.Red)
-                .setDescription("❌ **You're not in a Voice Channel!**");
+                .setDescription("❌ **You're not in a Custom Voice Channel!**");
             message.channel.send(embed);
             return;
         }
@@ -41,7 +41,7 @@ module.exports = {
             currentChannel.voice
         );
         const textChannel = message.guild.channels.resolve(currentChannel.text);
-        const embed = new MessageEmbed().setColor(colors.Green);
+        const successEmbed = new MessageEmbed().setColor(colors.Green);
 
         if (args.length) {
             const option = args[0].toLowerCase();
@@ -49,17 +49,17 @@ module.exports = {
 
             if (option === "voice") {
                 try {
-                    const newVoiceChannel = await voiceChannel.edit({
+                    await voiceChannel.edit({
                         name: data,
                     });
 
-                    userSetings.VCName = newVoiceChannel.name;
+                    userSetings.VCName = voiceChannel.name;
                     bot.dbClient.setUserSettings(
                         message.author.id,
                         userSetings
                     );
-                    embed.setDescription(
-                        "✅ **Successfully changed Voice Channel Name!**"
+                    successEmbed.setDescription(
+                        `✅ **Successfully changed Voice Channel name to \`${voiceChannel.name}\`**`
                     );
                 } catch (error) {
                     console.log(error.stack);
@@ -81,8 +81,8 @@ module.exports = {
                         message.author.id,
                         userSetings
                     );
-                    embed.setDescription(
-                        "✅ **Successfully changed Text Channel Name!**"
+                    successEmbed.setDescription(
+                        `✅ **Successfully changed Text Channel name to \`${textChannel.name}\`**`
                     );
                 } catch (error) {
                     console.log(error.stack);
@@ -93,82 +93,48 @@ module.exports = {
                         );
                     message.channel.send(embed);
                 }
-            }
-        } else {
-            const filter = (m) => m.author.id === message.author.id;
-
-            // Getter for voice channel name
-            const voiceEmbed = new MessageEmbed()
-                .setColor(colors.Turquoise)
-                .setDescription("**Enter the new name of the Voice Channel:**")
-                .setFooter("2 mins to answer");
-            message.channel.send(voiceEmbed);
-
-            const newVCName = await message.channel
-                .awaitMessages(filter, {
-                    max: 1,
-                    timeout: ms("2m"),
-                    errors: "time",
-                })
-                .catch(() =>
-                    message.channel.send("**❌ You ran out of time!**")
+            } else {
+                const newName = args.join(" ");
+                // Fetch the two channels
+                const voiceChannel = message.guild.channels.resolve(
+                    currentChannel.voice
                 );
-            console.log(newVCName.first().content);
-
-            // Getter for text channel name
-            const textEmbed = new MessageEmbed()
-                .setColor(colors.Turquoise)
-                .setDescription("**Enter the new name of the Text Channel:**")
-                .setFooter("2 mins to answer");
-            message.channel.send(textEmbed);
-
-            const newTCName = await message.channel
-                .awaitMessages(filter, {
-                    max: 1,
-                    timeout: ms("2m"),
-                    errors: "time",
-                })
-                .catch(() =>
-                    message.channel.send("**❌ You ran out of time!**")
+                const textChannel = message.guild.channels.resolve(
+                    currentChannel.text
                 );
-            console.log(newTCName.first().content);
 
-            // Fetch the two channels
-            const voiceChannel = message.guild.channels.resolve(
-                currentChannel.voice
-            );
-            const textChannel = message.guild.channels.resolve(
-                currentChannel.text
-            );
-
-            try {
-                const userSetings = bot.dbClient.getUserSettings(
-                    message.author.id
-                );
-                const newVoiceChannel = await voiceChannel.edit({
-                    name: newVCName.first().content,
-                });
-
-                const newTextChannel = await textChannel.edit({
-                    name: newTCName.first().content,
-                });
-
-                userSetings.VCName = newVoiceChannel.name;
-                userSetings.TCName = newTextChannel.name;
-                bot.dbClient.setUserSettings(message.author.id, userSetings);
-                embed.setDescription(
-                    "✅ **Successfully changed channel names!**"
-                );
-            } catch (error) {
-                console.log(error.stack);
-                const embed = new MessageEmbed()
-                    .setColor(colors.Red)
-                    .setDescription(
-                        "❌ **Something went wrong, please try again**"
+                try {
+                    const userSetings = bot.dbClient.getUserSettings(
+                        message.author.id
                     );
-                message.channel.send(embed);
+                    await voiceChannel.edit({
+                        name: newName,
+                    });
+
+                    await textChannel.edit({
+                        name: newName,
+                    });
+
+                    userSetings.VCName = newName;
+                    userSetings.TCName = newName;
+                    bot.dbClient.setUserSettings(
+                        message.author.id,
+                        userSetings
+                    );
+                    successEmbed.setDescription(
+                        `✅ **Successfully changed channel names to \`${newName}\`**`
+                    );
+                } catch (error) {
+                    console.log(error.stack);
+                    const embed = new MessageEmbed()
+                        .setColor(colors.Red)
+                        .setDescription(
+                            "❌ **Something went wrong, please try again**"
+                        );
+                    message.channel.send(embed);
+                }
+                message.channel.send(successEmbed);
             }
-            message.channel.send(embed);
         }
     },
 };

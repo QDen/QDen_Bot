@@ -31,7 +31,7 @@ module.exports = {
         } else {
             const embed = new MessageEmbed()
                 .setColor(colors.Red)
-                .setDescription("❌ **You're not in a Voice Channel!**");
+                .setDescription("❌ **You're not in a Custom Voice Channel!**");
             message.channel.send(embed);
             return;
         }
@@ -41,15 +41,26 @@ module.exports = {
             currentChannel.voice
         );
 
+        let MAX_BITRATE;
+        if (message.guild.premiumTier === 0) {
+            MAX_BITRATE = 96;
+        } else if (message.guild.premiumTier === 1) {
+            MAX_BITRATE = 128;
+        } else if (message.guild.premiumTier === 2) {
+            MAX_BITRATE = 256;
+        } else if (message.guild.premiumTier === 3) {
+            MAX_BITRATE = 384;
+        }
+
         if (
             Number.isNaN(parseInt(args[0])) ||
             parseInt(args[0]) < 8 ||
-            parseInt(args[0]) > 128
+            parseInt(args[0]) > MAX_BITRATE
         ) {
             const embed = new MessageEmbed()
                 .setColor(colors.Red)
                 .setDescription(
-                    "❌ **Bitrate must be between 8kpbs to 128kbps!**"
+                    `❌ **Bitrate must be between 8kpbs to ${MAX_BITRATE}kbps!**`
                 );
             message.channel.send(embed);
             return;

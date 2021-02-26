@@ -28,7 +28,7 @@ module.exports = {
         } else {
             const embed = new MessageEmbed()
                 .setColor(colors.Red)
-                .setDescription("❌ **You're not in a Voice Channel!**");
+                .setDescription("❌ **You're not in a Custom Voice Channel!**");
             message.channel.send(embed);
             return;
         }

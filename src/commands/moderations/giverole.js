@@ -51,7 +51,7 @@ module.exports = {
         }
 
         // Sanity check: can user give this role?
-        if (member.roles.highest.comparePositionTo(role) >= 0) {
+        if (member.roles.highest.comparePositionTo(role) <= 0) {
             message.reply(
                 "Cannot give role that is same or higher than your own."
             );

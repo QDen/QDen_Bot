@@ -50,7 +50,7 @@ module.exports = {
         }
 
         // Sanity check: can user take this role?
-        if (member.roles.highest.comparePositionTo(role) >= 0) {
+        if (member.roles.highest.comparePositionTo(role) <= 0) {
             message.reply(
                 "Cannot take role that is same or higher than your own."
             );
