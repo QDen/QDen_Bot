@@ -291,7 +291,9 @@ class Utilities {
             \`q.allow <@user>\` to allow a user into the voice channel
             \`q.deny <@user>\` to deny a user into the voice channel
             \`q.bitrate\` to set the bitrate of the voice channel
-            \`q.limit\` to set the user limit of the voice channel`);
+            \`q.limit\` to set the user limit of the voice channel
+            \`q.claim\` to claim the channels **ONLY WHEN THE OWNER IS ABSENT**
+            \`q.message (join/leave)\` to set the message when someone joins or leaves the voice channel`);
         return embed;
     }
 
