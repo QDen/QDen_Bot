@@ -210,6 +210,9 @@ module.exports = (bot) => {
                         }
                     }
                 } else if (activeChannels) {
+                    const defaultName = `${newState.member.user.username}'s Channel`;
+                    const joinMsg = "**%user% joined!**";
+                    const leaveMsg = "**%user% left!**";
                     const currentChannel = activeChannels.find(
                         (channel) => channel.voice === channelID
                     );
@@ -217,6 +220,28 @@ module.exports = (bot) => {
                         const userSettings = bot.dbClient.getUserSettings(
                             currentChannel.owner
                         );
+
+                        // Get user settings to check if memeber is cached in the db
+                        let userCache = bot.dbClient.getUserSettings(
+                            newState.id
+                        );
+                        // If not cached, cache it.
+                        if (!userCache) {
+                            userCache = {
+                                owner: newState.member.user.id,
+                                VCName: defaultName,
+                                TCName: defaultName,
+                                joinMsg,
+                                leaveMsg,
+                                userLimit: 0,
+                                bitrate: 64000,
+                            };
+
+                            bot.dbClient.setUserSettings(
+                                newState.id,
+                                userCache
+                            );
+                        }
 
                         if (newState.channel.members.size > 1) {
                             const textChannel = oldState.guild.channels.resolve(

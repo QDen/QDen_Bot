@@ -1,3 +1,4 @@
+const { stripIndents } = require("common-tags");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
@@ -95,6 +96,7 @@ module.exports = {
                 }
             } else {
                 const newName = args.join(" ");
+
                 // Fetch the two channels
                 const voiceChannel = message.guild.channels.resolve(
                     currentChannel.voice
@@ -135,6 +137,18 @@ module.exports = {
                 }
                 message.channel.send(successEmbed);
             }
+        } else {
+            const embed = new MessageEmbed().setColor(colors.Red)
+                .setDescription(stripIndents`❌ **Invalid usage of \`q.name\` command!**
+                
+                **Proper Usage:**
+                \`\`\`
+                q.name <new name for text and voice channels>
+                q.name text <this is a text channel name>
+                q.name voice <this is a voice channel name>
+                \`\`\`
+               `);
+            message.channel.send(embed);
         }
     },
 };
