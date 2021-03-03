@@ -62,39 +62,29 @@ module.exports = {
         }
 
         const position = message.guild.roles.cache.find(
-            (role) => role.name === "Member"
+            (role) => role.name === "🔇Muted"
         ).position;
-        const restrictedCategory = [
-            "Server Stats",
-            "Welcome",
-            "Admin area",
-            "BEHAVE YOURSELF",
-        ];
         let muted = message.guild.roles.cache.find(
-            (role) => role.name === "tuporsiksOwan"
+            (role) => role.name === "🔇Muted"
         );
         if (!muted) {
             try {
                 muted = await message.guild.roles.create({
                     data: {
-                        name: "tuporsiksOwan",
-                        color: "BLACK",
+                        name: "🔇Muted",
+                        color: "#8b8b8b",
                         position: position + 1,
                         permissions: [],
                     },
                 });
                 message.guild.channels.cache.forEach(async (channel) => {
-                    if (channel.type === "category") {
-                        if (!restrictedCategory.includes(channel.name)) {
-                            await channel.updateOverwrite(muted, {
-                                VIEW_CHANNEL: null,
-                                SEND_MESSAGES: false,
-                                ADD_REACTIONS: false,
-                                CONNECT: false,
-                                SPEAK: false,
-                            });
-                        }
-                    }
+                    await channel.updateOverwrite(muted, {
+                        VIEW_CHANNEL: null,
+                        SEND_MESSAGES: false,
+                        ADD_REACTIONS: false,
+                        CONNECT: false,
+                        SPEAK: false,
+                    });
 
                     // message.reply(channel);
                 });

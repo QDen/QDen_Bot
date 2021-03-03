@@ -61,7 +61,7 @@
 	},
 	"155149108183695360": {
 		"name": "Dyno",
-		"status": "offline"
+		"status": "online"
 	},
 	"402528814548254720": {
 		"name": "PatchBot",
@@ -81,6 +81,10 @@
 	},
 	"235148962103951360": {
 		"name": "Carl-bot",
+		"status": "offline"
+	},
+	"816370054026625054": {
+		"name": "QDev",
 		"status": "offline"
 	}
 }

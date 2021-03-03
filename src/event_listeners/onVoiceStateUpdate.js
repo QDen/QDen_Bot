@@ -18,6 +18,10 @@ module.exports = (bot) => {
                 newState.guild.id
             );
 
+            if (!guildSettings) {
+                return;
+            }
+
             // Everyone role
             const everyone = newState.guild.roles.cache.find(
                 (role) => role.name === "@everyone"
@@ -276,6 +280,9 @@ module.exports = (bot) => {
 
             // Fetch user settings and active channels from local db
             const activeChannels = bot.dbClient.getActiveChannels(guildID);
+            if (!activeChannels) {
+                return;
+            }
             const currentChannel = activeChannels.find(
                 (channel) => channel.voice === channelID
             );

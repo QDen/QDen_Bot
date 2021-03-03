@@ -55,4 +55,18 @@ module.exports = async (bot) => {
             (ch) => ch.id === "774273629147103283"
         );
     });
+
+    // bot.on("error", (err) => {
+    //     console.log("Error: ", err);
+    // });
+
+    // bot.on("warn", (info) => {
+    //     console.log("Warning: ", info);
+    // });
+
+    // bot.on("debug", (info) => {
+    //     const BLUE = "\x1b[1;34m";
+    //     const RESET = "\x1b[0m";
+    //     console.log(`${BLUE}Debug: ${RESET}`, info);
+    // });
 };

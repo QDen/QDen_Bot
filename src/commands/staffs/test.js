@@ -10,28 +10,24 @@ module.exports = {
     description: "",
     usage: ["`-<command | alias> `"],
     async run(bot, message, args) {
-        // const location = stringSimilarity.findBestMatch(
-        //     args.join(" "),
-        //     bot.covidAPI.locations
+        const location = stringSimilarity.findBestMatch(
+            args.join(" "),
+            bot.covidAPI.locations
+        );
+
+        const top10 = location.ratings.sort((a, b) => a > b);
+
+        // const data = await bot.covidAPI.getDataByLocationAndDate(
+        //     location.bestMatch.target,
+        //     bot.covidAPI.lastDate
         // );
 
-        // // const data = await bot.covidAPI.getDataByLocationAndDate(
-        // //     location.bestMatch.target,
-        // //     bot.covidAPI.lastDate
-        // // );
+        const attachment = new MessageAttachment(
+            Buffer.from(bot.covidAPI.locations.join("\n")),
+            "Available locations.txt"
+        );
 
-        // const attachment = new MessageAttachment(
-        //     Buffer.from(bot.covidAPI.locations.join("\n")),
-        //     "Available locations.txt"
-        // );
-
-        // message.channel.send(attachment);
-
-        // const embed = new MessageEmbed()
-        //     .setColor(colors.Turquoise)
-        //     .setDescription(args.join(" "));
-        // message.channel.send(embed);
-
-        console.log(args.shift());
+        message.channel.send(attachment);
+        console.log(top10);
     },
 };
