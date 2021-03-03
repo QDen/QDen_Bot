@@ -60,16 +60,16 @@ module.exports = {
                 );
         }
 
-        const muted = message.guild.roles.cache.find(
-            (role) => role.name === "tuporsiksOwan"
+        const mutedRole = message.guild.roles.cache.find(
+            (role) => role.name === "🔇Muted"
         );
-        if (!toMute.roles.cache.has(muted.id)) {
+        if (!toMute.roles.cache.has(mutedRole.id)) {
             return message.channel.send(
                 `\`${toMute.user.tag}\` is currently unmuted, are you sure that's the right one?`
             );
         }
 
-        await toMute.roles.remove(muted).then((member) => {
+        await toMute.roles.remove(mutedRole).then((member) => {
             let reason;
 
             // If no reason provided
