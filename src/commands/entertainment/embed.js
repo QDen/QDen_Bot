@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-
+const axios = require("axios").default;
 const colors = require("../../utils/colors.json");
 
 module.exports = {
@@ -20,37 +20,44 @@ module.exports = {
             });
         }
 
-        if (args.length < 1) {
+        if (args.length < 1 && message.attachments.size === 0) {
             message.channel.send("No args!");
+            return;
         }
+        // const { data } = await axios.get(message.attachments.first().url);
+        // console.log(message.attachments.size);
+        // const embed = new MessageEmbed(data);
+        // message.channel.send(embed);
 
         message.channel.startTyping();
-        setTimeout(async () => {
-            try {
-                let object;
-                // Catches errors if syntax is invalid.
-                try {
-                    object = JSON.parse(args.join(" "));
-                    console.log(object);
-                } catch (error) {
-                    // syntax error
-                    const embed = new MessageEmbed()
-                        .setTitle("Oops!")
-                        .setColor(colors.Red)
-                        .setDescription(
-                            "❌ **Wrong syntax! Must be `JSON` form!**"
-                        );
-                    message.channel.send(embed);
-                    message.channel.stopTyping(true);
-                    return;
-                }
-                const embed = new MessageEmbed(object);
-                await message.channel.stopTyping(true);
-                message.channel.send(embed);
-            } catch (err) {
-                console.log(err);
+        let embed;
+        // Catches errors if syntax is invalid.
+        try {
+            if (message.attachments) {
+                const { data } = await axios.get(
+                    message.attachments.first().url
+                );
+                embed = new MessageEmbed(data);
+                // console.log(typ);
+            } else {
+                embed = new MessageEmbed(JSON.parse(args.join(" ")));
             }
-        }, 2000);
-        message.delete();
+        } catch (error) {
+            console.log(error);
+            // syntax error
+            const embed = new MessageEmbed()
+                .setTitle("Oops!")
+                .setColor(colors.Red)
+                .setDescription("❌ **Wrong syntax! Must be `JSON` form!**");
+            message.channel.send(embed);
+            message.channel.stopTyping(true);
+            return;
+        }
+        embed.setFooter(
+            `${bot.user.username} | By MahoMuri`,
+            bot.user.displayAvatarURL()
+        );
+        await message.channel.stopTyping(true);
+        message.channel.send(embed);
     },
 };
