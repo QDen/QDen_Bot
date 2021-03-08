@@ -33,7 +33,7 @@ module.exports = {
         let embed;
         // Catches errors if syntax is invalid.
         try {
-            if (message.attachments) {
+            if (message.attachments.size > 0) {
                 const { data } = await axios.get(
                     message.attachments.first().url
                 );
@@ -58,6 +58,7 @@ module.exports = {
             bot.user.displayAvatarURL()
         );
         await message.channel.stopTyping(true);
-        message.channel.send(embed);
+        await message.channel.send(embed);
+        message.delete();
     },
 };
