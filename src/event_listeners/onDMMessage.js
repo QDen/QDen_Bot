@@ -32,8 +32,7 @@ module.exports = async (bot) => {
                             .setTitle("**New Complaint!**")
                             .addFields(
                                 {
-                                    name:
-                                        "──────────────── ∘°❉°∘ ─────────────────",
+                                    name: "──────────────── ∘°❉°∘ ─────────────────",
                                     value: `${collected.first().content}`,
                                     inline: true,
                                 },
@@ -43,8 +42,7 @@ module.exports = async (bot) => {
                                     inline: true,
                                 },
                                 {
-                                    name:
-                                        "──────────────── °∘❉∘° ─────────────────",
+                                    name: "──────────────── °∘❉∘° ─────────────────",
                                     value: "\u2800",
                                 }
                             )

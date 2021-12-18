@@ -1,5 +1,5 @@
 const { stripIndents } = require("common-tags");
-const { getMember } = require("../../utils/functions.js");
+const { getMember } = require("../../utils/functions");
 
 module.exports = {
     name: "giverole",

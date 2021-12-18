@@ -41,20 +41,17 @@ module.exports = (bot) => {
                     // If the user is new
                     if (!userSettings) {
                         // Voice channel creation
-                        const userVoiceChannel = await newState.guild.channels.create(
-                            defaultName,
-                            {
+                        const userVoiceChannel =
+                            await newState.guild.channels.create(defaultName, {
                                 type: "voice",
                                 parent: guildSettings.categoryID,
                                 bitrate: 64000,
                                 userLimit: 0,
-                            }
-                        );
+                            });
 
                         // Text channel creation
-                        const userTextChannel = await newState.guild.channels.create(
-                            defaultName,
-                            {
+                        const userTextChannel =
+                            await newState.guild.channels.create(defaultName, {
                                 type: "text",
                                 parent: guildSettings.categoryID,
                                 permissionOverwrites: [
@@ -63,8 +60,7 @@ module.exports = (bot) => {
                                         deny: ["VIEW_CHANNEL"],
                                     },
                                 ],
-                            }
-                        );
+                            });
 
                         // Voice channel perms
                         userVoiceChannel.createOverwrite(newState.member.user, {
@@ -120,14 +116,15 @@ module.exports = (bot) => {
                     } else {
                         // The user has data in the db
                         // Voice channel creation
-                        const userVoiceChannel = await newState.guild.channels.create(
-                            userSettings.VCName,
-                            {
-                                type: "voice",
-                                parent: guildSettings.categoryID,
-                                userLimit: userSettings.userLimit,
-                            }
-                        );
+                        const userVoiceChannel =
+                            await newState.guild.channels.create(
+                                userSettings.VCName,
+                                {
+                                    type: "voice",
+                                    parent: guildSettings.categoryID,
+                                    userLimit: userSettings.userLimit,
+                                }
+                            );
 
                         let MAX_BITRATE;
                         if (newState.guild.premiumTier === 0) {
@@ -156,19 +153,20 @@ module.exports = (bot) => {
                         }
 
                         // Text channel creation
-                        const userTextChannel = await newState.guild.channels.create(
-                            userSettings.TCName,
-                            {
-                                type: "text",
-                                parent: guildSettings.categoryID,
-                                permissionOverwrites: [
-                                    {
-                                        id: everyone.id, // everyone role
-                                        deny: ["VIEW_CHANNEL"],
-                                    },
-                                ],
-                            }
-                        );
+                        const userTextChannel =
+                            await newState.guild.channels.create(
+                                userSettings.TCName,
+                                {
+                                    type: "text",
+                                    parent: guildSettings.categoryID,
+                                    permissionOverwrites: [
+                                        {
+                                            id: everyone.id, // everyone role
+                                            deny: ["VIEW_CHANNEL"],
+                                        },
+                                    ],
+                                }
+                            );
 
                         // Voice channel perms
                         userVoiceChannel.createOverwrite(newState.member.user, {
@@ -295,9 +293,8 @@ module.exports = (bot) => {
                 const textChannelID = activeChannels.find(
                     (channel) => channel.voice === channelID
                 ).text;
-                const textChannel = oldState.guild.channels.resolve(
-                    textChannelID
-                );
+                const textChannel =
+                    oldState.guild.channels.resolve(textChannelID);
                 if (voiceChannel.members.size === 0) {
                     voiceChannel.delete();
                     textChannel.delete();
