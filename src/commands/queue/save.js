@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const ms = require("ms");
-const Savedlist = require("../../models/savedlist.js");
+const Savedlist = require("../../models/savedlist");
 
 let saveTimer;
 

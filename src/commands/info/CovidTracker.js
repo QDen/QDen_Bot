@@ -5,7 +5,7 @@ const url = "https://www.worldometers.info/coronavirus/?";
 const phurl = "https://www.worldometers.info/coronavirus/country/philippines/";
 const { MessageEmbed } = require("discord.js");
 const colors = require("../../utils/colors.json");
-const { addCommas } = require("../../utils/functions.js");
+const { addCommas } = require("../../utils/functions");
 
 module.exports = {
     name: "covid",

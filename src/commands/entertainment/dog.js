@@ -4,7 +4,7 @@ const $ = require("cheerio");
 const queryString = require("query-string");
 const { MessageEmbed } = require("discord.js");
 const colors = require("../../utils/colors.json");
-const { filterBreed } = require("../../utils/functions.js");
+const { filterBreed } = require("../../utils/functions");
 
 const DOG_API_URL = "https://api.thedogapi.com/";
 const { DOG_API_KEY } = process.env;

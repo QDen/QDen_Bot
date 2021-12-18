@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { promptMessage } = require("../../utils/functions.js");
+const { promptMessage } = require("../../utils/functions");
 const colors = require("../../utils/colors.json");
 
 const chooseArr = ["🗻", "📰", "✂"];

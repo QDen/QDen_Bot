@@ -1,4 +1,4 @@
-const savedlist = require("../../models/savedlist.js");
+const savedlist = require("../../models/savedlist");
 
 module.exports = {
     name: "prune",
